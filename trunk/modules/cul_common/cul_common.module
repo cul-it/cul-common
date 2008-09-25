@@ -1,0 +1,17 @@
+<?php
+// $Id$
+/**
+ * @file
+ * API of commonly needed services, like centralized authentication.
+ */
+
+/**
+ * Implementation of hook_help()
+ */
+function cul_common_help($path, $arg) {
+    if ($path == 'admin/help#cul_common') {
+        $txt = '.';
+    }
+    return '<p>' . t($txt) . '</p>';
+}
+
