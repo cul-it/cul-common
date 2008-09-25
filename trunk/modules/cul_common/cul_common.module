@@ -5,6 +5,7 @@
  * API of commonly needed services, like centralized authentication.
  */
 
+
 /**
  * Implementation of hook_help()
  */
@@ -15,15 +16,26 @@ function cul_common_help($path, $arg) {
     return '<p>' . t($txt) . '</p>';
 }
 
+/**
+ * Basic authentication method, redirects to a CUWebAuth protected directory,
+ * and upon successful authentication, it will set a 'netid' cookie.
+ */
+function cu_authenticate() {
+  if (isset($_COOKIE['netid'])) {
+    return $_COOKIE['netid'];
+  } else {
+    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate', drupal_get_destination());
+  }
+}
 
 /**
  * Implementation of hook_view()
  */
 function cul_common_view($node, $teaser=FALSE, $page=FALSE) {
-    $netid = '';
-    if (! isset($_COOKIE['netid'])) {
-      drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/index.php', drupal_get_destination());
-    }
+  // TODO: need to start with a check of the node field injected
+  if (! isset($_COOKIE['netid'])) {
+    cu_authenticate();
+  }
   return $node;
 }
 
