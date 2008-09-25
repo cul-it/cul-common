@@ -10,8 +10,21 @@
  */
 function cul_common_help($path, $arg) {
     if ($path == 'admin/help#cul_common') {
-        $txt = '.';
+        $txt = 'API of commonly needed services, like centralized authentication.';
     }
     return '<p>' . t($txt) . '</p>';
 }
+
+
+/**
+ * Implementation of hook_view()
+ */
+function cul_common_view($node, $teaser=FALSE, $page=FALSE) {
+    $netid = '';
+    if (! isset($_COOKIE['netid'])) {
+      drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/index.php', drupal_get_destination());
+    }
+  return $node;
+}
+
 
