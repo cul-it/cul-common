@@ -4,3 +4,36 @@
  * Install the CUL Common module.
  * @file
  */
+
+/**
+ * Implementation of hook_install().
+ */
+function cul_common_install() {
+  drupal_install_schema('cul_common');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function cul_common_uninstall() {
+  drupal_uninstall_schema('cul_common');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function cul_common_schema() {
+    $schema['cuwebauth'] = array(
+        'fields' => array(
+            'nid' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+             ),
+         ),
+         'primary key' => array('nid',),
+    );
+    return $schema;
+}
+
+
