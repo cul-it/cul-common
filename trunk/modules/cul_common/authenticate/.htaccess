@@ -1,0 +1,38 @@
+# taken from
+# https://confluence.cornell.edu/display/NETADMINWIKI/CuWebAuth+Linux
+
+# modify httpd.conf:
+# AllowOverride Limit AuthConfig FileInfo
+# for the appopriate file/directory
+
+
+# .htaccess
+#
+# See documentation on http://aads.cit.cornell.edu/ for more information on these directives and their nuances.
+AuthAuthoritative Off
+AuthName CORNELL
+
+# cuweblogin only:
+#AuthType cuweblogin
+
+# OR
+# cuweblogin or sidecar
+AuthType All
+
+CUWAcusspTimeout 3
+#
+# Restrict access to specific Cornell NetID's
+#require netid rlb32 pms25 jjs87
+
+#
+# Restrict access to anyone with a valid Cornell NetID
+require valid-user
+
+CUWAtimeout inactivity
+
+#
+# ProxyAllow
+CUWAproxyAllow direct
+# If you want to make content available as a channel via uPortal, use the following line.
+# CUWAproxyAllow corba-agent.uportal direct
+
