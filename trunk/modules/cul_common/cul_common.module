@@ -16,6 +16,31 @@ function cul_common_help($path, $arg) {
 }
 
 /**
+ * Don't bother admins or various content managers with authentication
+ * when they are already authenticated with Drupal.
+ */
+function can_bypass_auth($roles = NULL) {
+  if ($roles == NULL || ! is_array($roles)) {
+    $roles = array('administrator', 'content manager', 'webvision-admin');
+  }
+
+  $can_bypass = FALSE;
+  global $user;
+
+  if (is_array($user->roles)) {
+    foreach ($roles as $role) {
+      if (in_array($role, array_values($user->roles))) {
+        $can_bypass = TRUE;
+        break;
+      }
+    }
+  }
+
+  return $can_bypass;
+}
+
+
+/**
  * Basic authentication method, redirects to a CUWebAuth protected directory,
  * and upon successful authentication, it will set a 'netid' cookie.
  */
@@ -92,7 +117,7 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
       break;
       
     case 'view':
-      if (get_cuwebauth($node) && ! isset($_COOKIE['netid'])) {
+      if (get_cuwebauth($node) && ! isset($_COOKIE['netid']) && ! can_bypass_auth()) {
         cu_authenticate();
       } 
       break;
