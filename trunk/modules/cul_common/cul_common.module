@@ -93,11 +93,8 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
       
     case 'view':
       if (get_cuwebauth($node) && ! isset($_COOKIE['netid'])) {
-        //echo 'not authenticated';
         cu_authenticate();
-      } else {
-          echo 'authenticated';
-      }
+      } 
       break;
   }
 }
