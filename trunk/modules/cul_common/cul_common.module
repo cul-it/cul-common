@@ -3,6 +3,9 @@
 /**
  * @file
  * API of commonly needed services, like centralized authentication.
+ *
+ * @todo externalize strings, manage in drupal admin screens
+ * 
  */
 
 /**
@@ -124,6 +127,107 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
   }
 }
 
+/**
+ * Convert a PHP array to JSON, reusable across services.
+ */
+function _array_to_json($input) {
+  $output = '{';
+  foreach ($input as $key => $value) {
+    $output .=  '"' . $key . '": "' . $value . '", ';   
+  }
+  $output .=  "}\n";
+  return $output;
+}
 
+/**
+ * Given a CU Net ID, retrieve patron information from Voyager.
+ */
+function get_voyager_patron_info($format='php_array') { 
+  $output = NULL;
+  if ($conn = oci_connect("dbread", "dbread", "//lib22-c.library.cornell.edu:1521/VGER")) {
+    $netid  = cu_authenticate();
+    $email  = $netid . '@cornell.edu';
+    $query = "SELECT pb.patron_barcode,p.last_name, p.first_name, p.patron_id 
+              FROM patron_barcode pb, patron_address pa, patron p 
+              WHERE pa.address_line1 = :netid 
+              AND pb.barcode_status = 1 
+              AND pb.patron_id = pa.patron_id 
+              AND pb.patron_id = p.patron_id";
+    $stid = oci_parse($conn, $query);
+    oci_bind_by_name($stid, ":netid", $email);
+    oci_define_by_name($stid, "PATRON_ID", $pid);
+    oci_define_by_name($stid, "PATRON_BARCODE", $bc);
+    oci_define_by_name($stid, "LAST_NAME", $last);
+    oci_define_by_name($stid, "FIRST_NAME", $given);
+    
+    if (!oci_execute($stid, OCI_DEFAULT)) {
+      $err = oci_error($stid);
+      $message = 'ERROR : query failed: ' . $err['message'];
+      watchdog('cul_common (voyager patron info)', $message, array(), WATGHDOG_ERROR);
+    }
+    
+    $results = array();
+    while (oci_fetch($stid)) {
+      $results['netid'] = $netid;
+      $results['pid'] = $pid;
+      $results['bc'] = $bc;
+      $results['last'] = $last;
+      $results['given'] = $given;
+    }
+        
+    if ($format == 'php_array') {
+      $output = $results;
+    } else if ($format == 'json') {
+      $output = _array_to_json($results);  
+    }
 
+  } else {
+    $err = oci_error();
+    $message = 'ERROR : Oracle could not establish a connection: ' . $err['message'];
+    watchdog('cul_common (voyager patron info)', $message, array(), WATGHDOG_ERROR);
+  }
+  return $output;
+}
 
+function get_ldap_data($returnFields = NULL, $format='php_array') {
+  $netid = cu_authenticate();
+  $output = NULL;
+
+  if ($returnFields == NULL) {
+    $returnFields = array('eduPersonPrimaryAffiliation',
+                          'cornellEduAcadCollege',
+                          'givenName',
+                          'sn',
+                          'cornellEduCampusAddress',
+                          'cornellEduCampusPhone',
+                          'Mail',
+                         );
+  }
+
+  if ($ds=ldap_connect("directory.cornell.edu")) {
+    $r=ldap_bind($ds);
+    $sr=ldap_search($ds,"ou=People,o=Cornell University,c=US", "uid=$netid", $returnFields);
+
+    if ($entries = ldap_get_entries($ds, $sr)) {
+      $results = array();
+      for ($i=0; $i < count($returnFields); $i++) {
+        $attr_name = $entries[0][$i];
+        if ($attr_name != '') {
+          $value = $entries[0][$attr_name][0];
+          $results[$attr_name] = $value;
+        }
+      }
+
+      if ($format == 'php_array') {
+        $output = $results;
+      } else if ($format == 'json') {
+        $output = _array_to_json($results);
+      }
+    }
+
+    ldap_close($ds);
+  } else {
+    watchdog('cul_common (LDAP data)', 'Could not connect to LDAP server', array(), WATGHDOG_ERROR);
+  }
+  return $output;
+}
