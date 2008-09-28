@@ -5,6 +5,7 @@
  * API of commonly needed services, like centralized authentication.
  *
  * @todo externalize strings, manage in drupal admin screens
+ * @todo test Oracle query on library6
  * 
  */
 
@@ -16,6 +17,31 @@ function cul_common_help($path, $arg) {
         $txt = 'API of commonly needed services, like centralized authentication.';
     }
     return '<p>' . t($txt) . '</p>';
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+function cul_common_menu() {
+  $items['cul_common.voyager'] = array(
+    'title' => 'Voyager Patron Data',
+    'page callback' => 'get_voyager_patron_json',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['cul_common.ldap'] = array(
+    'title' => 'LDAP Patron Data',
+    'page callback' => 'get_ldap_json',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['cul_common.logout'] = array(
+    'title' => 'CUWebAuth Logout',
+    'page callback' => 'cuwebauth_logout_from_url',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
 }
 
 /**
@@ -42,7 +68,6 @@ function can_bypass_auth($roles = NULL) {
   return $can_bypass;
 }
 
-
 /**
  * Basic authentication method, redirects to a CUWebAuth protected directory,
  * and upon successful authentication, it will set a 'netid' cookie.
@@ -54,6 +79,27 @@ function cu_authenticate() {
     $base_path = 'basepath=' . base_path() . '&';
     drupal_goto('http://'. $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('module', 'cul_common') . '/authenticate' , $base_path . drupal_get_destination());
   }
+}
+
+/**
+ * Simulate a CUWebAuth logout.
+ */
+function cuwebauth_logout($logout_url=NULL) {
+  unset($_COOKIE['netid']);
+  if ($logout_url) {
+    drupal_goto($logout_url);
+  }
+}
+
+/**
+ * Call cuwebauth_logout() from client.
+ */
+function cuwebauth_logout_from_url() {
+  $logout_url = NULL;
+  if (isset($_GET['$logout_url'])) {
+    $logout_url = $_GET['$logout_url'];  
+  }
+  cuwebauth_logout($logout_url);
 }
 
 /**
@@ -127,101 +173,122 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
   }
 }
 
-/**
- * Convert a PHP array to JSON, reusable across services.
- */
-function _array_to_json($input) {
-  $output = '{';
-  foreach ($input as $key => $value) {
-    $output .=  '"' . $key . '": "' . $value . '", ';   
-  }
-  $output .=  "}\n";
-  return $output;
-}
 
 /**
- * Given a CU Net ID, retrieve patron information from Voyager.
+ * Voyager query handling code
  */
-function get_voyager_patron_info($format='php_array') { 
-  $output = NULL;
+function _get_voyager_patron_data() {
+  $output = null;
   if ($conn = oci_connect("dbread", "dbread", "//lib22-c.library.cornell.edu:1521/VGER")) {
     $netid  = cu_authenticate();
     $email  = $netid . '@cornell.edu';
-    $query = "SELECT pb.patron_barcode,p.last_name, p.first_name, p.patron_id 
-              FROM patron_barcode pb, patron_address pa, patron p 
-              WHERE pa.address_line1 = :netid 
-              AND pb.barcode_status = 1 
-              AND pb.patron_id = pa.patron_id 
-              AND pb.patron_id = p.patron_id";
+    $query = "SELECT p.patron_id, pb.patron_barcode
+              FROM   patron_barcode pb, patron_address pa, patron p
+              WHERE  pa.address_line1 = :netid
+              AND    pb.barcode_status = 1
+              AND    pb.patron_id = pa.patron_id
+              AND    pb.patron_id = p.patron_id";
     $stid = oci_parse($conn, $query);
     oci_bind_by_name($stid, ":netid", $email);
-    oci_define_by_name($stid, "PATRON_ID", $pid);
-    oci_define_by_name($stid, "PATRON_BARCODE", $bc);
-    oci_define_by_name($stid, "LAST_NAME", $last);
-    oci_define_by_name($stid, "FIRST_NAME", $given);
-    
+    oci_define_by_name($stid, "patron_id", $pid);
+    oci_define_by_name($stid, "patron_barcode", $bc);
+    oci_define_by_name($stid, "first_name", $fn);
+    oci_define_by_name($stid, "last_name", $ln);
+       
     if (!oci_execute($stid, OCI_DEFAULT)) {
       $err = oci_error($stid);
       $message = 'ERROR : query failed: ' . $err['message'];
-      watchdog('cul_common (voyager patron info)', $message, array(), WATGHDOG_ERROR);
+      watchdog('cul_common (voyager patron data)', $message, array(), WATGHDOG_ERROR);
     }
     
-    $results = array();
+    $output = array();
     while (oci_fetch($stid)) {
-      $results['netid'] = $netid;
-      $results['pid'] = $pid;
-      $results['bc'] = $bc;
-      $results['last'] = $last;
-      $results['given'] = $given;
+      $output['patron_id'] = $pid;
+      $output['patron_barcode'] = $bc;
+      $output['first_name'] = $fn;
+      $output['last_name'] = $ln;
     }
         
-    if ($format == 'php_array') {
-      $output = $results;
-    } else if ($format == 'json') {
-      $output = _array_to_json($results);  
-    }
-
   } else {
     $err = oci_error();
     $message = 'ERROR : Oracle could not establish a connection: ' . $err['message'];
-    watchdog('cul_common (voyager patron info)', $message, array(), WATGHDOG_ERROR);
+    watchdog('cul_common (voyager patron data)', $message, array(), WATGHDOG_ERROR);
   }
   return $output;
 }
 
-function get_ldap_data($returnFields = NULL, $format='php_array') {
+/**
+ * Given a CU Net ID, retrieve patron data from Voyager.
+ * 
+ * Cached results are retrieved unless a refresh is forced.
+ * 
+ */
+function get_voyager_patron_data($force_refresh=FALSE) {
+  $netid = cu_authenticate();
+  $output = db_fetch_array(db_query('SELECT patron_id, patron_barcode, first_name, last_name FROM {cache_patron_data} where netid = "%s"', $netid));
+  
+  if (! $output) {
+    $output = _get_voyager_patron_data();
+    if ($output) {
+      db_query('INSERT INTO {cache_patron_data} (netid, patron_id, patron_barcode, first_name, last_name) VALUES ("%s", %d, "%s", "%s", "%s")', $netid, $output['patron_id'], $output['patron_barcode'], $output['first_name'], $output['last_name']);
+    }
+  } else {
+      if ($force_refresh) {
+        $output = _get_voyager_patron_data();
+        db_query('update {cache_patron_data} set patron_id = %d, patron_barcode = "%s", first_name = "%s", last_name = "%s" where netid = "%s"', $output['patron_id'], $output['patron_barcode'], $output['first_name'], $output['last_name'], $netid);
+      }
+  }
+  return $output;
+}
+
+/**
+ * Call get_voyager_patron_data() via URL, return JSON.
+ * 
+ */
+function get_voyager_patron_json() {
+  $force_refresh = FALSE;
+  if (isset($_GET['force_refresh']) && $_GET['force_refresh']) {
+    $force_refresh = TRUE;  
+  }
+  drupal_json(get_voyager_patron_data($force_refresh));
+}
+
+/**
+ * Given a CU Net ID, retrieve patron data from Cornell LDAP directory.
+ * 
+ * For a complete list of publicly available attributes and their definitions, see
+ * @link http://identity.cit.cornell.edu/ds/index.html .
+ *
+ */
+function get_ldap_data($return_fields=NULL) {
   $netid = cu_authenticate();
   $output = NULL;
 
-  if ($returnFields == NULL) {
-    $returnFields = array('eduPersonPrimaryAffiliation',
-                          'cornellEduAcadCollege',
-                          'givenName',
-                          'sn',
-                          'cornellEduCampusAddress',
-                          'cornellEduCampusPhone',
-                          'Mail',
+  if ($return_fields == NULL) {
+    $return_fields = array('eduPersonPrimaryAffiliation',
+                           'cornellEduAcadCollege',
+                           'givenName',
+                           'sn',
+                           'cornellEduCampusAddress',
+                           'cornellEduCampusPhone',
+                           'Mail',
                          );
+  } else if (is_string($return_fields)) {
+    $return_fields = split(',', $return_fields);   
   }
 
   if ($ds=ldap_connect("directory.cornell.edu")) {
     $r=ldap_bind($ds);
-    $sr=ldap_search($ds,"ou=People,o=Cornell University,c=US", "uid=$netid", $returnFields);
+    $sr=ldap_search($ds,"ou=People,o=Cornell University,c=US", "uid=$netid", $return_fields);
 
     if ($entries = ldap_get_entries($ds, $sr)) {
-      $results = array();
-      for ($i=0; $i < count($returnFields); $i++) {
+      $output = array();
+      for ($i=0; $i < count($return_fields); $i++) {
         $attr_name = $entries[0][$i];
         if ($attr_name != '') {
           $value = $entries[0][$attr_name][0];
-          $results[$attr_name] = $value;
+          $output[$attr_name] = $value;
         }
-      }
-
-      if ($format == 'php_array') {
-        $output = $results;
-      } else if ($format == 'json') {
-        $output = _array_to_json($results);
       }
     }
 
@@ -231,3 +298,16 @@ function get_ldap_data($returnFields = NULL, $format='php_array') {
   }
   return $output;
 }
+
+/**
+ * Call get_ldap_data() via URL, return JSON.
+ * 
+ */
+function get_ldap_json() {
+  $return_fields = NULL;
+  if (isset($_GET['return_fields'])) {
+    $return_fields = urldecode($_GET['return_fields']);  
+  }
+  drupal_json(get_ldap_data($return_fields));
+}
+

@@ -5,9 +5,4 @@ if (isset($netID) && $netID != '') {
 } 
 header('Location: ' .  $_GET['basepath'] . $_GET['destination']);
 exit();
-
 ?>
-
-
-
-
