@@ -182,18 +182,18 @@ function _get_voyager_patron_data() {
   if ($conn = oci_connect("dbread", "dbread", "//lib22-c.library.cornell.edu:1521/VGER")) {
     $netid  = cu_authenticate();
     $email  = $netid . '@cornell.edu';
-    $query = "SELECT p.patron_id, pb.patron_barcode
+    $query = "SELECT p.patron_id, pb.patron_barcode, p.first_name, p.last_name
               FROM   patron_barcode pb, patron_address pa, patron p
-              WHERE  pa.address_line1 = :netid
+              WHERE  pa.address_line1 = :email
               AND    pb.barcode_status = 1
               AND    pb.patron_id = pa.patron_id
               AND    pb.patron_id = p.patron_id";
     $stid = oci_parse($conn, $query);
-    oci_bind_by_name($stid, ":netid", $email);
-    oci_define_by_name($stid, "patron_id", $pid);
-    oci_define_by_name($stid, "patron_barcode", $bc);
-    oci_define_by_name($stid, "first_name", $fn);
-    oci_define_by_name($stid, "last_name", $ln);
+    oci_bind_by_name($stid, ":email", $email);
+    oci_define_by_name($stid, "PATRON_ID", $pid);
+    oci_define_by_name($stid, "PATRON_BARCODE", $bc);
+    oci_define_by_name($stid, "FIRST_NAME", $fn);
+    oci_define_by_name($stid, "LAST_NAME", $ln);
        
     if (!oci_execute($stid, OCI_DEFAULT)) {
       $err = oci_error($stid);
