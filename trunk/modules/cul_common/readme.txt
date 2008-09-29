@@ -21,6 +21,9 @@ LDAP Patron Information.
 ____________________________________________________
 Node based authentication with CUWebLogin.
 
+(This functionality requires that CUWebAuth Apache module, version 2 is
+installed and configured.)
+
 By default, all nodes now have an extra form field--a check box with the label
 "Require CUWebLogin?"--that indicates if particular nodes should require
 CUWebLogin. This field applies to all nodes regardless of type, and is weighted
@@ -43,6 +46,9 @@ This authentication bypass is designed to be configurable in the future.
 
 ____________________________________________________
 Authenticating programmatically.
+
+(This functionality requires that CUWebAuth Apache module, version 2 is
+installed and configured.)
 
 The same node based authentication mechanism can be called directly within PHP
 for arbitrary purposes with the following method:
