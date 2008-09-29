@@ -5,7 +5,6 @@
  * API of commonly needed services, like centralized authentication.
  *
  * @todo externalize strings, manage in drupal admin screens
- * @todo test Oracle query on library6
  * 
  */
 
