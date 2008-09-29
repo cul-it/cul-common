@@ -2,7 +2,7 @@ CONTENTS
 
 Node based authentication with CUWebLogin.
 
-Authenticating programmatically.
+Authenticating programmatically with CUWebLogin.
 
 Logging out.
   - Via PHP.
@@ -77,12 +77,14 @@ called via an AJAX GET request:
 The $logout_url can be provided in the query string:
   http://<domain>/cul_common.logout?logout_url=<url>
 
-Obviously, the query string will need to be URL encoded; cuwebauth_logout
+Obviously, the query string will need to be URL encoded; cuwebauth_logout()
 automatically decodes the URL.
 
 
 ____________________________________________________
 Voyager Patron Information
+
+(This functionality requires that PHP be compiled with OCI libraries.)
 
 Via PHP.
 
@@ -90,8 +92,8 @@ The following function can be called in PHP to retrieve user data from Voyager:
   Array get_voyager_patron_data($force_refresh=FALSE)
 
 Internally, this is accomplished through a lookup based on the user's Cornell net
-ID which is retrieved from the 'netid' cookie. If this cookie is does not exist,
-the CUWebLogin process already described is automatically implemented.
+ID,  which is retrieved from the 'netid' cookie. If this cookie does not exist,
+the CUWebLogin process already described is automatically invoked.
 
 This lookup is not optimized with the appropriate indexes in Voyager, so by
 default, the results of this method are cached in Drupal upon the first request
@@ -100,7 +102,7 @@ cache unless $force_refresh is set to TRUE. On a forced refresh, the data is
 re-retrieved from Voyager and the local cache is updated.
 
 The function returns a populated PHP array with the following keys:
-  - 'patron_id', the Voyager patron id
+  - 'patron_id'
   - 'patron_barcode'
   - 'first_name'
   - 'last_name'
@@ -120,6 +122,8 @@ forced refresh can be invoked through the following query string:
 ____________________________________________________
 LDAP Patron Information
 
+(This functionality requires that PHP be compiled with LDAP libraries.)
+
 Via PHP.
 
 The following function can be called in PHP to retrieve user data from the
@@ -127,8 +131,8 @@ Cornell LDAP directory:
   Array get_ldap_data($return_fields=NULL)
 
 Internally, this is accomplished through a lookup based on the user's Cornell net
-ID which is retrieved from the 'netid' cookie. If this cookie is does not exist,
-the CUWebLogin process already described is automatically implemented.
+ID, which is retrieved from the 'netid' cookie. If this cookie does not exist,
+the CUWebLogin process already described is automatically invoked.
 
 By default, the function returns a populated PHP array with the following LDAP
 attributes as keys:
@@ -217,7 +221,7 @@ the following URL:
 
   http://<domain>/cul_common.ldap
 
-The result is JSON formatted with the same defalt populated keys indicated
+The result is JSON formatted with the same default populated keys indicated
 above. Custom LDAP attributes can be specified with the following query string:
   http://<domain>/cul_common.ldap?return_fields=givenName,sn,Mail
 
