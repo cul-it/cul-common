@@ -49,7 +49,7 @@ function cul_common_menu() {
  */
 function can_bypass_auth($roles = NULL) {
   if ($roles == NULL || ! is_array($roles)) {
-    $roles = array('administrator', 'content manager', 'webvision-admin');
+    $roles = array('administrator', 'content manager', 'webvision-admin', 'faq-manager');
   }
 
   $can_bypass = FALSE;
