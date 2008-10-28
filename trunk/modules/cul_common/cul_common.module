@@ -138,32 +138,18 @@ function manage_cuwebuath($node) {
  */
 function cul_common_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
-    // Now we need to take care of loading one of the extended nodes from the
-    // database. An array containing our extra field needs to be returned.
     case 'load':
       return array('cuwebauth' => get_cuwebauth($node));
       break;
-
-    // Insert is called after the node has been validated and saved to the
-    // database. It gives us a chance to create our own record in the database.
     case 'insert':
       manage_cuwebuath($node);
       break;
-
-    // Update is called when an existing node has been changed. Here, we use a
-    // DELETE then an INSERT rather than an UPDATE. The reason is that a node
-    // created before this module was installed won't already have a rating
-    // saved so there would be nothing to update.
     case 'update':
       manage_cuwebuath($node);
       break;
-
-    // Delete is called whn the node is being deleted, it gives us a chance
-    // to delete the rating too.
     case 'delete':
       manage_cuwebuath($node);
       break;
-      
     case 'view':
       if (get_cuwebauth($node) && ! isset($_COOKIE['netid']) && ! can_bypass_auth()) {
         cu_authenticate();
