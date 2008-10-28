@@ -172,13 +172,32 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
   }
 }
 
+function _set_error_message($message, $stid=0) {
+  if ($stid) {
+    $err = oci_error($stid);
+  } else {
+    $err = oci_error();
+  }
+  $message ='ERROR: ' . $message . ' ' . $err['message'];
+  watchdog('cul_common (voyager database)', $message, array(), WATGHDOG_ERROR);
+}
+
+function get_voyager_connection() {
+  if ($conn = oci_connect("dbread", "dbread", "//lib22-c.library.cornell.edu:1521/VGER")) {
+    return $conn;
+  } else {
+    _set_error_message('Oracle could not establish a connection.');
+    return null;
+  }
+}
+
 
 /**
  * Voyager query handling code
  */
 function _get_voyager_patron_data() {
   $output = null;
-  if ($conn = oci_connect("dbread", "dbread", "//lib22-c.library.cornell.edu:1521/VGER")) {
+  if ($conn = get_voyager_connection()) {
     $netid  = cu_authenticate();
     $email  = $netid . '@cornell.edu';
     $query = "SELECT p.patron_id, pb.patron_barcode, p.first_name, p.last_name
@@ -187,31 +206,26 @@ function _get_voyager_patron_data() {
               AND    pb.barcode_status = 1
               AND    pb.patron_id = pa.patron_id
               AND    pb.patron_id = p.patron_id";
+
     $stid = oci_parse($conn, $query);
     oci_bind_by_name($stid, ":email", $email);
     oci_define_by_name($stid, "PATRON_ID", $pid);
     oci_define_by_name($stid, "PATRON_BARCODE", $bc);
     oci_define_by_name($stid, "FIRST_NAME", $fn);
     oci_define_by_name($stid, "LAST_NAME", $ln);
-       
-    if (!oci_execute($stid, OCI_DEFAULT)) {
-      $err = oci_error($stid);
-      $message = 'ERROR : query failed: ' . $err['message'];
-      watchdog('cul_common (voyager patron data)', $message, array(), WATGHDOG_ERROR);
-    }
-    
+
     $output = array();
-    while (oci_fetch($stid)) {
-      $output['patron_id'] = $pid;
-      $output['patron_barcode'] = $bc;
-      $output['first_name'] = $fn;
-      $output['last_name'] = $ln;
+    if (oci_execute($stid, OCI_DEFAULT)) {
+      while (oci_fetch($stid)) {
+        $output['patron_id'] = $pid;
+        $output['patron_barcode'] = $bc;
+        $output['first_name'] = $fn;
+        $output['last_name'] = $ln;
+      }
+    } else {
+      _set_error_message('Query failed', $stid);
     }
-        
-  } else {
-    $err = oci_error();
-    $message = 'ERROR : Oracle could not establish a connection: ' . $err['message'];
-    watchdog('cul_common (voyager patron data)', $message, array(), WATGHDOG_ERROR);
+    oci_close($conn);
   }
   return $output;
 }
