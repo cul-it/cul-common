@@ -158,7 +158,8 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
   }
 }
 
-function _set_error_message($message, $stid=0) {
+
+function _set_oracle_error_message($message, $stid=0) {
   if ($stid) {
     $err = oci_error($stid);
   } else {
@@ -172,7 +173,7 @@ function get_voyager_connection() {
   if ($conn = oci_connect("dbread", "dbread", "//lib22-c.library.cornell.edu:1521/VGER")) {
     return $conn;
   } else {
-    _set_error_message('Oracle could not establish a connection.');
+    _set_oracle_error_message('Oracle could not establish a connection.');
     return null;
   }
 }
@@ -209,7 +210,7 @@ function _get_voyager_patron_data() {
         $output['last_name'] = $ln;
       }
     } else {
-      _set_error_message('Query failed', $stid);
+      _set_oracle_error_message('Query failed', $stid);
     }
     oci_close($conn);
   }

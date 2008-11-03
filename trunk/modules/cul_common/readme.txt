@@ -16,7 +16,9 @@ LDAP Patron Information.
   - Via PHP.
   - Via Javascript.
 
-
+Misc. Voyager Functions
+  - get_voyager_connection()
+  - _set_error_message($message, $stid=0)
 
 ____________________________________________________
 Node based authentication with CUWebLogin.
@@ -231,3 +233,20 @@ The result is JSON formatted with the same default populated keys indicated
 above. Custom LDAP attributes can be specified with the following query string:
   http://<domain>/cul_common.ldap?return_fields=givenName,sn,Mail
 
+
+____________________________________________________
+Misc. Voyager Functions
+
+get_voyager_connection()
+
+This method encapsulates the username, password and URL for connecting to the
+Voyager database through Oracle. It returns a connection object, or calls the
+_set_error_message() function to report the error to Drupal watchdog.
+
+
+_set_oracle_error_message($message, $stid=0)
+
+This method makes it more convenient to report Oracle database errors to 
+watchdog, using a custom message. The $stid argument is the output of
+oci_parse($conn, $query). This method is automatically called by the
+get_voyager_connection() function if there is a problem connecting.
