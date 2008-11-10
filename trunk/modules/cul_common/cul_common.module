@@ -260,8 +260,10 @@ function get_voyager_patron_json() {
  * @link http://identity.cit.cornell.edu/ds/index.html .
  *
  */
-function get_ldap_data($return_fields=NULL) {
-  $netid = cu_authenticate();
+function get_ldap_data($return_fields=NULL, $netid=NULL) {
+  if ($netid == NULL) {
+    $netid = cu_authenticate();
+  }
   $output = NULL;
 
   if ($return_fields == NULL) {
