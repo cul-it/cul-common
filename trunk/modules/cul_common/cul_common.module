@@ -68,6 +68,14 @@ function can_bypass_auth($roles = NULL) {
 }
 
 /**
+ * Who is allowed to set CUWebAuth on nodes,
+ * for now, this is the same as those who can bypass CUWebAuth
+ */
+function can_set_auth($roles = NULL) {
+  return can_bypass_auth($roles);
+}
+
+/**
  * Basic authentication method, redirects to a CUWebAuth protected directory,
  * and upon successful authentication, it will set a 'netid' cookie.
  */
@@ -105,7 +113,7 @@ function cuwebauth_logout_from_url() {
  * Implementation of hook_form_alter()
  */
 function cul_common_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['#node']) && can_bypass_auth()) {
+  if (isset($form['#node']) && can_set_auth()) {
       $node = $form['#node'];
       $form['cuwebauth'] = array (
         '#type' => 'checkbox',
