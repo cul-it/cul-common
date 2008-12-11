@@ -105,7 +105,7 @@ function cuwebauth_logout_from_url() {
  * Implementation of hook_form_alter()
  */
 function cul_common_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['#node'])) {
+  if (isset($form['#node']) && can_bypass_auth()) {
       $node = $form['#node'];
       $form['cuwebauth'] = array (
         '#type' => 'checkbox',
