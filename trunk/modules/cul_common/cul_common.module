@@ -180,7 +180,7 @@ function _set_oracle_error_message($message, $stid=0) {
 }
 
 function get_voyager_connection() {
-  if ($conn = oci_connect("dbread", "dbread", "//lib22-c.library.cornell.edu:1521/VGER")) {
+  if ($conn = oci_connect("dbread", "dbread", "//database.library.cornell.edu:1521/VGER")) {
     return $conn;
   } else {
     _set_oracle_error_message('Oracle could not establish a connection.');
@@ -322,4 +322,15 @@ function get_ldap_json() {
   }
   drupal_json(get_ldap_data($return_fields));
 }
+/**
+ * Implementation of hook_mail_alter().
+ * I could not find the mail_id as being passed to me.
+ */
+
+function cul_common_mail_alter(&$message) {
+    if ($message['id'] == 'webform_submission') {   
+      $message['subject'] = $message['subject'] . ' from ' .$message['headers']['From'] ;  
+      $message['headers']['Reply-To'] = $message['headers']['From']; 
+    }
+ }
 
