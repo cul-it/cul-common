@@ -85,8 +85,9 @@ function cu_authenticate() {
   } else {
     // bring the user back to the path they started with, try to avoid the internal node number.
     $rq = str_replace(base_path(), "" ,request_uri());
+    $_REQUEST['destination'] = $rq;
     $base = 'basepath=' . base_path() . '&' . 'destination=' . urlencode($rq);
-    drupal_goto('http://' . $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('module','cul_common') . '/authenticate',$base);
+    drupal_goto('http://' . $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('module','cul_common') . '/authenticate', $base);
   }
 }
 
