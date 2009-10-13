@@ -17,7 +17,7 @@ function cul_common_help($path, $arg) {
     }
     return '<p>' . t($txt) . '</p>';
 }
-
+ 
 /**
  * Implementation of hook_menu()
  */
