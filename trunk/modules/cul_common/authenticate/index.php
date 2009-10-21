@@ -8,6 +8,9 @@ if (isset($netID) && $netID != '') {
 //echo '<br>';
 //echo $_REQUEST['destination'];
 
+      unset($_REQUEST['destination']);
+
+
 header('Location: ' .  $_GET['basepath'] . $_GET['destination']);
 exit();
 
