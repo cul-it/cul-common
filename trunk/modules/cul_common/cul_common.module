@@ -99,12 +99,16 @@ function cu_authenticate() {
     echo $rq;
     echo '<br/><br/>';
 
+    echo 'urlencode($rq) var: ';
+    echo urlencode($rq);
+    echo '<br/><br/>';
+
     echo '$base var: ';
     echo $base;
     echo '<br/><br/>';
 
-    echo 'urlencode($rq) var: ';
-    echo urlencode($rq);
+    echo 'get_destination(): ';
+    echo get_destination();
     echo '<br/><br/>';
 
     echo 'drupal_goto url: ';
