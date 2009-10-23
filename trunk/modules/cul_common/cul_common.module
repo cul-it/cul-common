@@ -107,8 +107,8 @@ function cu_authenticate() {
     echo $base;
     echo '<br/><br/>';
 
-    echo 'get_destination(): ';
-    echo get_destination();
+    echo 'drupal_get_destination(): ';
+    echo drupal_get_destination();
     echo '<br/><br/>';
 
     echo 'drupal_goto url: ';
