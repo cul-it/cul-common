@@ -4,14 +4,7 @@ if (isset($netID) && $netID != '') {
     setcookie('netid', $netID, 0, '/', '.cornell.edu');
 }
 
-//echo 'Location: ' .  $_GET['basepath'] . $_GET['destination'];
-//echo '<br>';
-//echo $_REQUEST['destination'];
-
-      //unset($_REQUEST['destination']);
-
-echo $_GET['destination'];
-//header('Location: ' . $_GET['destination']);
+header('Location: ' . $_GET['destination']);
 exit();
 
 ?>
