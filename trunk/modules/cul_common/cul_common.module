@@ -80,41 +80,43 @@ function can_set_auth($roles = NULL) {
  * and upon successful authentication, it will set a 'netid' cookie.
  */
 function cu_authenticate() {
-//  if (isset($_COOKIE['netid'])) {
-//    return $_COOKIE['netid'];
-//  } else {
-    // bring the user back to the path they started with, try to avoid the internal node number.
-    $rq = str_replace(base_path(), "" ,request_uri());
-    $base = 'basepath=' . base_path() . '&' . 'destination=' . urlencode($rq);
+  if (isset($_COOKIE['netid'])) {
+    return $_COOKIE['netid'];
+  } else {
+     
+//    $rq = str_replace(base_path(), "" ,request_uri());
+//    $base = 'basepath=' . base_path() . '&' . 'destination=' . urlencode($rq);
+//
+//    echo 'base_path(): ';
+//    echo base_path();
+//    echo '<br/><br/>';
+//
+//    echo 'request_uri(): ';
+//    echo request_uri();
+//    echo '<br/><br/>';
+//
+//    echo '$rq var: ';
+//    echo $rq;
+//    echo '<br/><br/>';
+//
+//    echo 'urlencode($rq) var: ';
+//    echo urlencode($rq);
+//    echo '<br/><br/>';
+//
+//    echo '$base var: ';
+//    echo $base;
+//    echo '<br/><br/>';
+//
+//    echo 'drupal_get_destination(): ';
+//    echo drupal_get_destination();
+//    echo '<br/><br/>';
+//
+//    echo 'drupal_goto url: ';
+//    echo 'http://' . $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('module','cul_common') . '/authenticate', $base;
 
-    echo 'base_path(): ';
-    echo base_path();
-    echo '<br/><br/>';
-
-    echo 'request_uri(): ';
-    echo request_uri();
-    echo '<br/><br/>';
-    
-    echo '$rq var: ';
-    echo $rq;
-    echo '<br/><br/>';
-
-    echo 'urlencode($rq) var: ';
-    echo urlencode($rq);
-    echo '<br/><br/>';
-
-    echo '$base var: ';
-    echo $base;
-    echo '<br/><br/>';
-
-    echo 'drupal_get_destination(): ';
-    echo drupal_get_destination();
-    echo '<br/><br/>';
-
-    echo 'drupal_goto url: ';
-    echo 'http://' . $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('module','cul_common') . '/authenticate', $base;
-    //drupal_goto('http://' . $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('module','cul_common') . '/authenticate', $base);
-  //}
+    //bring the user back to the path they started with, try to avoid the internal node number.
+    drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . urlencode(request_uri()));
+  }
 }
 
 /**
