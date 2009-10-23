@@ -115,6 +115,7 @@ function cu_authenticate() {
 //    echo 'http://' . $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('module','cul_common') . '/authenticate', $base;
 
     //bring the user back to the path they started with, try to avoid the internal node number.
+    unset($_REQUEST['destination']);
     drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . urlencode(request_uri()));
   }
 }
