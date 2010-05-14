@@ -145,6 +145,11 @@ function manage_cuwebuath($node) {
  * We will implement several node API operations here. This hook allows us to
  * act on all major node operations, so we can manage our additional data
  * appropriately.
+ *
+ * NOTE: this does not address how protected content in search results and RSS
+ * feeds should be handled, and this should be updated once we decide how those
+ * should be handled. See http://api.drupal.org/api/function/hook_nodeapi for
+ * the $op values of "rss item" and "search result".
  */
 function cul_common_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
