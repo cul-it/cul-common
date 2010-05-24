@@ -9,6 +9,21 @@
  */
 
 /**
+ * Implementation of hook_init()
+ */
+function cul_common_init() {
+  $GLOBALS['conf']['cache'] = FALSE;
+  // Make sure CUWebAuth is triggered properly
+  // when the node_view is overwritten by the Panels module
+  if (module_exists('panels') && 'node' == arg(0) && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if (FALSE !== $node) {
+      cul_common_nodeapi($node, 'view', NULL, TRUE);
+    }
+  }
+}
+
+/**
  * Implementation of hook_help()
  */
 function cul_common_help($path, $arg) {
