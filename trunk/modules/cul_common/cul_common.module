@@ -10,9 +10,9 @@
 
 /**
  * Implementation of hook_init()
+ * this implements the patch for panels on http://drupal.org/node/362065
  */
 function cul_common_init() {
-  $GLOBALS['conf']['cache'] = FALSE;
   // Make sure CUWebAuth is triggered properly
   // when the node_view is overwritten by the Panels module
   if (module_exists('panels') && 'node' == arg(0) && is_numeric(arg(1))) {
