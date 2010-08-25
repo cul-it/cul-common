@@ -10,6 +10,9 @@ function get_and_cache_json($cid, $url, $refresh=FALSE) {
         $json = $cached->data;
     } else {
         $json = get_json($url);
+        // code offered by John Fereira to deal with encoding issues with Ares data
+        $encoding =  mb_detect_encoding($json, "auto");
+        $json = mb_convert_encoding($json, $encoding, "UTF-8");
         cache_set($cid, $json, 'cache');
     }
     return $json;
