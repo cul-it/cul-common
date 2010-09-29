@@ -126,6 +126,6 @@ function cul_common_mail_alter(&$message) {
  }
 
 function cul_common_cron() {
-  get_and_set_cuwa_salt(TRUE);
+  get_and_set_cuwa_secret(TRUE);
 }
 

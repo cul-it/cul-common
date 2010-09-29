@@ -1,7 +1,7 @@
 <?php
 
-global $cuwa_salt_cache_name;
-$cuwa_salt_cache_name = 'cuwa_net_id_salt';
+global $cuwa_secret_cache_name;
+$cuwa_secret_cache_name = 'cuwa_net_id_secret';
 
 /**
  * Don't bother admins or various content managers with authentication
@@ -38,7 +38,8 @@ function can_set_auth($roles = NULL) {
 function verify_netid() {
   $verified = FALSE;
   if (isset($_COOKIE['netid']) && isset($_COOKIE['verify_netid'])) {
-    if (crypt(md5($_COOKIE['netid']), md5(get_and_set_cuwa_salt())) == $_COOKIE['verify_netid']) {
+    $secret = get_and_set_cuwa_secret();
+    if (crypt($_COOKIE['netid'] . $secret) == $_COOKIE['verify_netid']) {
       $verified = TRUE;
     }
   }
@@ -58,7 +59,7 @@ function cu_authenticate() {
   } else {
     //bring the user back to the path they started with, try to avoid the internal node number.
     //assumes use of 'friendly' URL's
-    get_and_set_cuwa_salt();
+    get_and_set_cuwa_secret();
     unset($_REQUEST['destination']);
     drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . urlencode(request_uri()));
   }
@@ -109,15 +110,15 @@ function get_random_string($length=10, $characters = '0123456789ABCDEFGHIJKLMNOP
     return $string;
 }
 
-function get_and_set_cuwa_salt($refresh=FALSE) {
-    static $cuwa_salt;
-    global $cuwa_salt_cache_name;
-    if (($cached = cache_get($cuwa_salt_cache_name, 'cache')) && ! empty($cached->data) && ! $refresh) {
-        $cuwa_salt = $cached->data;
+function get_and_set_cuwa_secret($refresh=FALSE) {
+    static $cuwa_secret;
+    global $cuwa_secret_cache_name;
+    if (($cached = cache_get($cuwa_secret_cache_name, 'cache')) && ! empty($cached->data) && ! $refresh) {
+        $cuwa_secret = $cached->data;
     } else {
-        $cuwa_salt = get_random_string();
-        cache_set($cuwa_salt_cache_name, $cuwa_salt, 'cache');
+        $cuwa_secret = get_random_string();
+        cache_set($cuwa_secret_cache_name, $cuwa_secret, 'cache');
     }
-    return $cuwa_salt;
+    return $cuwa_secret;
 }
 

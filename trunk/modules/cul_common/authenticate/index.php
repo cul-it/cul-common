@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '../../../../../default/settings.php');
 
-$salt = '';
+$secret = '';
 $url = parse_url($db_url);
 
 // Decode url-encoded information in the db connection string
@@ -28,12 +28,12 @@ if (!$connection || !mysql_select_db(substr($url['path'], 1))) {
     // Show error screen otherwise
     echo mysql_error();
 } else {
-    $result = mysql_query('SELECT data from cache WHERE cid = "cuwa_net_id_salt"');
+    $result = mysql_query('SELECT data from cache WHERE cid = "cuwa_net_id_secret"');
     if (!$result) {
         die('Invalid query: ' . mysql_error());
     } else {
         while ($row = mysql_fetch_assoc($result)) {
-            $salt = $row['data'];
+            $secret = $row['data'];
         }
     }
 }
@@ -42,7 +42,7 @@ mysql_close($connection);
 $netid = getenv('REMOTE_USER');
 if (isset($netid) && $netid) {
     setcookie('netid', $netid, 0, '/', '.cornell.edu');
-    setcookie('verify_netid', crypt(md5($netid), md5($salt)), 0, '/', '.cornell.edu');
+    setcookie('verify_netid', crypt($netid . $secret)), 0, '/', '.cornell.edu');
 }
 
 header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
