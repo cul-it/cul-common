@@ -5,7 +5,7 @@
  * API of commonly needed services, like centralized authentication.
  *
  * @todo externalize strings, manage in drupal admin screens
- * 
+ *
  */
 
 require_once(dirname(__FILE__) . '/helpers/cuwebauth.php');
@@ -37,7 +37,7 @@ function cul_common_help($path, $arg) {
     }
     return '<p>' . t($txt) . '</p>';
 }
- 
+
 /**
  * Implementation of hook_menu()
  */
@@ -63,6 +63,21 @@ function cul_common_menu() {
   return $items;
 }
 
+
+/**
+ * Implementation of hook_form_alter()
+ */
+function cul_common_form_alter(&$form, $form_state, $form_id) {
+  if (isset($form['#node']) && can_set_auth()) {
+      $node = $form['#node'];
+      $form['cuwebauth'] = array (
+        '#type' => 'checkbox',
+        '#title' => 'Require CUWebLogin?',
+        '#default_value' => isset($node->cuwebauth) ? $node->cuwebauth : 0,
+        '#weight' => -10,
+      );
+  }
+}
 
 /**
  * Implementation of hook_nodeapi().
@@ -91,9 +106,9 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
       manage_cuwebuath($node);
       break;
     case 'view':
-      if (get_cuwebauth($node) && ! isset($_COOKIE['netid']) && ! can_bypass_auth()) {
+      if ((! can_bypass_auth()) && get_cuwebauth($node)) {
         cu_authenticate();
-      } 
+      }
       break;
   }
 }
@@ -104,9 +119,13 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
  */
 
 function cul_common_mail_alter(&$message) {
-    if ($message['id'] == 'webform_submission') {   
-      $message['subject'] = $message['subject'] . ' from ' .$message['headers']['From'] ;  
-      $message['headers']['Reply-To'] = $message['headers']['From']; 
+    if ($message['id'] == 'webform_submission') {
+      $message['subject'] = $message['subject'] . ' from ' .$message['headers']['From'] ;
+      $message['headers']['Reply-To'] = $message['headers']['From'];
     }
  }
+
+function cul_common_cron() {
+  get_and_set_cuwa_salt(TRUE);
+}
 

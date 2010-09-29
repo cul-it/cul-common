@@ -92,3 +92,15 @@ function get_voyager_patron_json() {
   }
   drupal_json(get_voyager_patron_data($force_refresh));
 }
+
+/**
+ * A workaround when Oracle support is not compiled into PHP
+ * The results of this should be cached.
+ *
+ */
+function voyagerQueryToJSON($query) {
+  $json = exec('java -cp "' . dirname(__FILE__) . '/:' . dirname(__FILE__) . '/lib/ojdbc14_g.jar" voyagerQueryToJson "' . $query . '"');
+  $encoding =  mb_detect_encoding($json, "auto");
+  $json = mb_convert_encoding($json, $encoding, "UTF-8");
+  return $json;
+}
