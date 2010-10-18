@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ALL);
 
 $settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
 require_once $settings_path;
