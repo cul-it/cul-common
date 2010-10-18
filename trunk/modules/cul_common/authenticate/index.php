@@ -5,6 +5,8 @@ require_once(dirname(__FILE__) . '../../../../../default/settings.php');
 $secret = '';
 $url = parse_url($db_url);
 
+echo 'index.php, url: ' . $url . '<br>';
+
 // Decode url-encoded information in the db connection string
 $url['user'] = urldecode($url['user']);
 // Test if database url has a password.
