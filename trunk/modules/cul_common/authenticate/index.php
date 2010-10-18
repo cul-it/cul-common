@@ -6,7 +6,7 @@ require_once(dirname(__FILE__) . '/../../../../default/settings.php') or die ("c
 
 echo 'index.php, db_url: ' . $db_url . '<br>';
 
-$secret = '';
+$secret = '12345';
 $url = parse_url($db_url);
 
 echo 'index.php, url: ' . $url . '<br>';
