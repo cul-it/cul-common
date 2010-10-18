@@ -1,6 +1,5 @@
 <?php
 
-echo 'index.php,br>';
 require_once(dirname(__FILE__) . '../../../../../default/settings.php') or die ("couldn't get database settings");
 
 $secret = '';
@@ -48,10 +47,11 @@ if (isset($netid) && $netid) {
     setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
 
-//header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
 echo 'index.php, netid: ' . $netid . '<br>';
 echo 'index.php, secret: ' . $secret . '<br>';
 echo 'index.php, verify_netid: ' . md5($netid . $secret) . '<br>';
+//header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+
 exit();
 
 ?>
