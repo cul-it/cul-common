@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '../../../../../default/settings.php') || die "couldn't get database settings";
+require_once(dirname(__FILE__) . '../../../../../default/settings.php') or die ("couldn't get database settings");
 
 $secret = '';
 $url = parse_url($db_url);
