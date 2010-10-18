@@ -6,7 +6,7 @@ echo date('m/d/Y h:i:s a', time()) . '<br><br>';
 echo 'index.php<br>';
 $settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
 echo 'requiring file at: ' . $settings_path . '<br>';
-require_once($settings_path) or die ("couldn't get database settings");
+require_once $settings_path or die ("couldn't get database settings");
 
 echo 'index.php, db_url: ' . $db_url . '<br>';
 
