@@ -39,7 +39,7 @@ function verify_netid() {
   $verified = FALSE;
   if (isset($_COOKIE['netid']) && isset($_COOKIE['verify_netid'])) {
     $secret = get_and_set_cuwa_secret();
-    if (crypt($_COOKIE['netid'] . $secret) == $_COOKIE['verify_netid']) {
+    if (md5($_COOKIE['netid'] . $secret) == $_COOKIE['verify_netid']) {
       $verified = TRUE;
     }
   }
