@@ -45,7 +45,10 @@ if (isset($netid) && $netid) {
     setcookie('verify_netid', md5($netid . $secret)), 0, '/', '.cornell.edu');
 }
 
-header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+//header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+echo 'index.php, netid: ' . $netid . '<br>';
+echo 'index.php, secret: ' . $secret . '<br>';
+echo 'index.php, verify_netid: ' . md5($netid . $secret) . '<br>';
 exit();
 
 ?>
