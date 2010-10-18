@@ -4,8 +4,9 @@ error_reporting(E_ALL);
 echo date('m/d/Y h:i:s a', time()) . '<br><br>';
 
 echo 'index.php<br>';
-echo 'requiring file at: ' . str_replace('//','/',dirname(__FILE__).'/') . '../../../../default/settings.php' . '<br>';
-require_once(str_replace('//', '/', dirname(__FILE__) .'/') . '../../../../default/settings.php') or die ("couldn't get database settings");
+$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
+echo 'requiring file at: ' . $settings_path . '<br>';
+require_once($settings_path) or die ("couldn't get database settings");
 
 echo 'index.php, db_url: ' . $db_url . '<br>';
 
