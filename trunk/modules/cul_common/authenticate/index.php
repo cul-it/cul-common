@@ -1,6 +1,9 @@
 <?php
 
+echo 'index.php<br>';
 require_once(dirname(__FILE__) . '../../../../../default/settings.php') or die ("couldn't get database settings");
+
+echo 'index.php, db_url: ' . $db_url . '<br>';
 
 $secret = '';
 $url = parse_url($db_url);
