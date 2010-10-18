@@ -54,9 +54,10 @@ if (isset($netid) && $netid) {
 echo 'index.php, netid: ' . $netid . '<br>';
 echo 'index.php, secret: ' . $secret . '<br>';
 echo 'index.php, verify_netid: ' . md5($netid . $secret) . '<br>';
-//header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+flush();
 
-exit();
+//header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+//exit();
 
 ?>
 
