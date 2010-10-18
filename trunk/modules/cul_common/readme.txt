@@ -64,6 +64,129 @@ originally requested URI where the original authentication check will then
 succeed.
 
 
+UPDATE: 9/2010
+
+PROBLEM:
+
+The cul_common Drupal module stores a user's Cornell net ID in a cookie as a way of carrying this information across the boundary between a static CUWebAuth (CUWA) resource and a dynamic resource that behaves as if it were protected by CUWA.
+
+It was pointed out that a malicious user with sufficient knowledge and means could manipulate this cookie for resources that rely on this value to display user specific data.
+
+
+SOLUTION:
+
+The following solution ensures that through the provided API, only the net ID returned by CUWA is available to Drupal. A malicious user who tries to manipuate the netid cookie will go through the CUWA authentication process again, where the correct value will be restored before returning to Drupal and processing the request.
+
+A variation of the following solution is already being used by Jim Reidy's CUWebAuth Drupal login module, so only things relying on the older cul_common module had the identified security issue, and therefore, only the My Account resource is affected.
+
+These basic authentication functions can work while under a CUWA protected area or not:
+
+        function verify_netid() {
+          $verified = FALSE;
+          if (isset($_COOKIE['netid']) && isset($_COOKIE['verify_netid'])) {
+            if (crypt(md5($_COOKIE['netid']), md5(get_and_set_cuwa_salt())) == $_COOKIE['verify_netid']) {
+              $verified = TRUE;
+            }
+          }
+          return $verified;
+        }
+
+        function cu_authenticate() {
+          $netID = getenv('REMOTE_USER');
+          if (isset($netID) && $netID) {
+            return $netID;
+          } else if (verify_netid()) {
+            return $_COOKIE['netid'];
+          } else {
+            //bring the user back to the path they started with, try to avoid the internal node number.
+            //assumes use of 'friendly' URL's
+            get_and_set_cuwa_salt();
+            unset($_REQUEST['destination']);
+            drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . urlencode(request_uri()));
+          }
+        }
+
+The intention here is that the cu_authenticate() function can be called by any Drupal code to conveniently invoke CUWA and retrieve a verified net ID value, thus making CUWA usable in a non-static environment.
+
+Initially, a user is redirected to a CUWA protected directory that contains a PHP script that retrieves the REMOTE_USER environment variable set by the CUWA Apache module, along with a salt value stored in the Drupal cache, and creates two cookies: one with the netid value, and one with an encrypted value based on this netid and the salt:
+
+        require_once(dirname(__FILE__) . '../../../../../default/settings.php');
+
+        $salt = '';
+        $url = parse_url($db_url);
+
+        // Decode url-encoded information in the db connection string
+        $url['user'] = urldecode($url['user']);
+        // Test if database url has a password.
+        $url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : '';
+        $url['host'] = urldecode($url['host']);
+        $url['path'] = urldecode($url['path']);
+
+        // Allow for non-standard MySQL port.
+        if (isset($url['port'])) {
+            $url['host'] = $url['host'] .':'. $url['port'];
+        }
+
+        $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
+        if (!$connection || !mysql_select_db(substr($url['path'], 1))) {
+            // Show error screen otherwise
+            echo mysql_error();
+        } else {
+            $result = mysql_query('SELECT data from cache WHERE cid = "cuwa_net_id_salt"');
+            if (!$result) {
+                die('Invalid query: ' . mysql_error());
+            } else {
+                while ($row = mysql_fetch_assoc($result)) {
+                    $salt = $row['data'];
+                }
+            }
+        }
+        mysql_close($connection);
+
+        $netid = getenv('REMOTE_USER');
+        if (isset($netid) && $netid) {
+            setcookie('netid', $netid, 0, '/', '.cornell.edu');
+            setcookie('verify_netid', crypt(md5($netid), md5($salt)), 0, '/', '.cornell.edu');
+        }
+
+        header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+        exit();
+
+(It should be noted that values assigned to PHP super globals, such as $_SESSION and $_COOKIE are lost when the assigning script performs a redirect. The accepted workaround for this is to call setcookie() explicitly, later accessing the value through $_COOKIE.)
+
+Upon successfully authenticating, the user is redirected back into Drupal, accessing the originally requested URL, where the cu_authenticate() function is called a second time, this time safely returning the verified net ID value.
+
+As for the salt value, it is randomly generated and stored in Drupal's cache:
+
+        function get_random_string($length=10, $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') {
+            $string = '';
+            for ($p = 0; $p < $length; $p++) {
+                $string .= $characters[mt_rand(0, strlen($characters))];
+            }
+            return $string;
+        }
+
+        function get_and_set_cuwa_salt($refresh=FALSE) {
+            static $cuwa_salt;
+            global $cuwa_salt_cache_name;
+            if (($cached = cache_get($cuwa_salt_cache_name, 'cache')) && ! empty($cached->data) && ! $refresh) {
+                $cuwa_salt = $cached->data;
+            } else {
+                $cuwa_salt = get_random_string();
+                cache_set($cuwa_salt_cache_name, $cuwa_salt, 'cache');
+            }
+            return $cuwa_salt;
+        }
+
+This value is updated every time the Drupal cron runs (we typically set this to run every hour):
+
+        function cul_common_cron() {
+          get_and_set_cuwa_salt(TRUE);
+        }
+
+So, even if someone has this source code, they cannot know the value of the verify_netid cookie being used at any given time on any Drupal site that uses this code.
+
+
 ____________________________________________________
 Logging out.
 
@@ -246,7 +369,8 @@ _set_error_message() function to report the error to Drupal watchdog.
 
 _set_oracle_error_message($message, $stid=0)
 
-This method makes it more convenient to report Oracle database errors to 
+This method makes it more convenient to report Oracle database errors to
 watchdog, using a custom message. The $stid argument is the output of
 oci_parse($conn, $query). This method is automatically called by the
 get_voyager_connection() function if there is a problem connecting.
+
