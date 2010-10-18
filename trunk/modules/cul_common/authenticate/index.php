@@ -42,7 +42,7 @@ mysql_close($connection);
 $netid = getenv('REMOTE_USER');
 if (isset($netid) && $netid) {
     setcookie('netid', $netid, 0, '/', '.cornell.edu');
-    setcookie('verify_netid', crypt($netid . $secret)), 0, '/', '.cornell.edu');
+    setcookie('verify_netid', md5($netid . $secret)), 0, '/', '.cornell.edu');
 }
 
 header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
