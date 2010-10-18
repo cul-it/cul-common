@@ -1,8 +1,8 @@
 <?php
 
 echo 'index.php<br>';
-echo 'requiring file at: ' . dirname(__FILE__) . '/../../../../default/settings.php' . '<br>';
-require_once(dirname(__FILE__) . '/../../../../default/settings.php') or die ("couldn't get database settings");
+echo 'requiring file at: ' . dirname(__FILE__) . '../../../../default/settings.php' . '<br>';
+require_once(dirname(__FILE__) . '../../../../default/settings.php') or die ("couldn't get database settings");
 
 echo 'index.php, db_url: ' . $db_url . '<br>';
 
