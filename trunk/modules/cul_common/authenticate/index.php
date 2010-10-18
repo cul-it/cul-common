@@ -1,19 +1,11 @@
 <?php
 error_reporting(E_ALL);
 
-echo date('m/d/Y h:i:s a', time()) . '<br><br>';
-
-echo 'index.php<br>';
 $settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
-echo 'requiring file at: ' . $settings_path . '<br>';
 require_once $settings_path;
 
-echo 'index.php, db_url: ' . $db_url . '<br>';
-
-$secret = '12345';
+$secret = '';
 $url = parse_url($db_url);
-
-echo 'index.php, url: ' . $url . '<br>';
 
 // Decode url-encoded information in the db connection string
 $url['user'] = urldecode($url['user']);
@@ -55,13 +47,8 @@ if (isset($netid) && $netid) {
     setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
 
-echo 'index.php, netid: ' . $netid . '<br>';
-echo 'index.php, secret: ' . $secret . '<br>';
-echo 'index.php, verify_netid: ' . md5($netid . $secret) . '<br>';
-flush();
-
-//header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
-//exit();
+header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+exit();
 
 ?>
 
