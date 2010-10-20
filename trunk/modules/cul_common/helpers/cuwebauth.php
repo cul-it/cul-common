@@ -67,7 +67,7 @@ function cu_authenticate($destination='') {
     //assumes use of 'friendly' URL's
     get_and_set_cuwa_secret();
     unset($_REQUEST['destination']);
-    drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . destination);
+    drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . $destination);
   }
 }
 
