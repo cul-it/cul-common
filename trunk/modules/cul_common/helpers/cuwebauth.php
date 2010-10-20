@@ -51,7 +51,7 @@ function verify_netid() {
  * and upon successful authentication, it will set a 'netid' cookie.
  */
 function cu_authenticate($destination='') {
-  if (isset($destination) || $destination != '') {
+  if (isset($destination) && $destination != '') {
     $destination=urlencode($destination);
   } else {
     $destination=urlencode(request_uri());
