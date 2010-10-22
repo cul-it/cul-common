@@ -58,7 +58,7 @@ function cu_authenticate($destination='') {
   }
   
   $netID = getenv('REMOTE_USER');
-  if (isset($netID) && $netID) {
+  if (isset($netID) && $netID != '') {
     return $netID;
   } else if (verify_netid()) {
     return $_COOKIE['netid'];
@@ -69,7 +69,6 @@ function cu_authenticate($destination='') {
     unset($_REQUEST['destination']);
     drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . $destination);
   }
-  return $netID;
 }
 
 /**
