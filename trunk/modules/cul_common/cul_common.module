@@ -32,6 +32,7 @@ function cul_common_init() {
  * Implementation of hook_help()
  */
 function cul_common_help($path, $arg) {
+	$txt = '';
     if ($path == 'admin/help#cul_common') {
         $txt = 'API of commonly needed services, like centralized authentication.';
     }
