@@ -40,13 +40,6 @@ function verify_netid() {
   if (isset($_COOKIE['netid']) && isset($_COOKIE['verify_netid'])) {
     $secret = get_and_set_cuwa_secret();
     global $cuwa_secret_cache_name;
-//    echo 'verify_netid:cuwa_secret_cache_name: ' . $cuwa_secret_cache_name . '<br>';
-//    echo 'verify_netid:netid: ' . $_COOKIE['netid'] . '<br>';
-//    echo 'verify_netid:secret: ' . $secret . '<br>';
-//    echo 'verify_netid:md5 result: ' . md5($_COOKIE['netid'] . $secret) . '<br>';
-//    echo 'verify_netid:md5 result with blank secret: ' . md5($_COOKIE['netid'] . '') . '<br>';
-//    echo 'verify_netid:verify_netid: ' . $_COOKIE['verify_netid'] . '<br>';
-//    exit();
     if (md5($_COOKIE['netid'] . $secret) == $_COOKIE['verify_netid']) {
       $verified = TRUE;
     }
