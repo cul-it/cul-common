@@ -29,7 +29,8 @@ if (!$connection || !mysql_select_db(substr($url['path'], 1))) {
     // Show error screen otherwise
     echo mysql_error();
 } else {
-    $result = mysql_query('SELECT data from cache WHERE cid = "cuwa_net_id_secret"');
+    $table_name = $db_prefix . 'cache';
+    $result = mysql_query('SELECT data from ' . $table_name . ' WHERE cid = "cuwa_net_id_secret"');
     if (!$result) {
         die('Invalid query: ' . mysql_error());
     } else {
@@ -46,7 +47,12 @@ if (isset($netid) && $netid) {
     setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
 
-header('Location: http://' . $_SERVER['HTTP_HOST'] . $_GET['destination']);
+$destination = $_GET['destination'];
+if (! isset($_GET['destination']) || $_GET['destination'] == '') {
+  $destination = '/';
+}
+
+header('Location: http://' . $_SERVER['HTTP_HOST'] . $destination);
 exit();
 
 ?>
