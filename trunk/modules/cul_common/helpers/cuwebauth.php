@@ -51,7 +51,7 @@ function verify_netid() {
  * Basic authentication method, redirects to a CUWebAuth protected directory,
  * and upon successful authentication, it will set a 'netid' cookie.
  */
-function cu_authenticate($destination='') {
+function cu_authenticate($destination='', $permit='') {
   if (isset($destination) && $destination != '') {
     $destination=urlencode($destination);
   } else {
@@ -68,7 +68,7 @@ function cu_authenticate($destination='') {
     //assumes use of 'friendly' URL's
     get_and_set_cuwa_secret();
     unset($_REQUEST['destination']);
-    drupal_goto(drupal_get_path('module','cul_common') . '/authenticate', 'destination=' . $destination);
+    drupal_goto(drupal_get_path('module','cul_common') . '/authenticate/' . $permit . 'index.php', 'destination=' . $destination);
   }
 }
 
