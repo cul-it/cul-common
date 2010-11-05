@@ -100,11 +100,13 @@ function get_cuwebauth($node) {
 }
 
 function manage_cuwebuath($node) {
-   $cuwebauth = get_cuwebauth($node);
-   if ($node->cuwebauth && ! $cuwebauth) {
-     db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', $node->nid);
-   } else if (! $node->cuwebauth && $cuwebauth) {
-     db_query('DELETE FROM {cuwebauth} WHERE nid = %d', $node->nid);
+   if (isset($node->cuwebauth)) {
+     $cuwebauth = get_cuwebauth($node);
+     if ($node->cuwebauth && ! $cuwebauth) {
+       db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', $node->nid);
+     } else if (! $node->cuwebauth && $cuwebauth) {
+       db_query('DELETE FROM {cuwebauth} WHERE nid = %d', $node->nid);
+     }
    }
 }
 
@@ -112,7 +114,7 @@ function manage_cuwebuath($node) {
 function get_random_string($length=10, $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') {
     $string = '';
     for ($p = 0; $p < $length; $p++) {
-        $string .= $characters[mt_rand(0, strlen($characters))];
+        $string .= $characters[mt_rand(0, strlen($characters)-1)];
     }
     return $string;
 }
