@@ -75,9 +75,15 @@ function cu_authenticate($destination='', $permit='') {
 /**
  * Simulate a CUWebAuth logout.
  */
-function cuwebauth_logout($logout_url=NULL) {
+function cuwebauth_logout($logout_url=NULL, $include_cuwa_cookies=FALSE) {
   unset($_COOKIE['netid']);
   unset($_COOKIE['verify_netid']);
+  if ($include_cuwa_cookies == FALSE) {
+    unset($_COOKIE['cuwltgttime']);
+    unset($_COOKIE['CUWALastWeblogin']);
+    unset($_COOKIE['cuweblogin2']);
+
+  }
   if ($logout_url) {
     drupal_goto($logout_url);
   }
