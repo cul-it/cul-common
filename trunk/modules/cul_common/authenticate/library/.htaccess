@@ -1,3 +1,4 @@
 AuthName CORNELL
 AuthType All
-Require Permit cu.library
+require valid-user
+require permit library
