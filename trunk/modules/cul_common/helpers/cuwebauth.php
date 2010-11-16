@@ -68,6 +68,12 @@ function cu_authenticate($destination='', $permit='') {
     //assumes use of 'friendly' URL's
     get_and_set_cuwa_secret();
     unset($_REQUEST['destination']);
+    if (!empty($permit)) {
+    	$permit .= "/"; // permit names used as subdirectory names under authenticate
+    	$path = drupal_get_path('module','cul_common') . '/authenticate/' . $permit . 'index.php';
+    	if (!file_exists($path)) 
+    		return FALSE;	// unexpected permit
+    	}
     drupal_goto(drupal_get_path('module','cul_common') . '/authenticate/' . $permit . 'index.php', 'destination=' . $destination);
   }
 }
