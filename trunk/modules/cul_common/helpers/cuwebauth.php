@@ -84,10 +84,15 @@ function cu_authenticate($destination='', $permit='') {
 function cuwebauth_logout($logout_url=NULL, $include_cuwa_cookies=FALSE) {
   unset($_COOKIE['netid']);
   unset($_COOKIE['verify_netid']);
+  setcookie('netid', '', time() - 3600);
+  setcookie('verify_netid', '', time() - 3600);
   if ($include_cuwa_cookies) {
     unset($_COOKIE['cuwltgttime']);
     unset($_COOKIE['CUWALastWeblogin']);
     unset($_COOKIE['cuweblogin2']);
+	setcookie('cuwltgttime', '', time() - 3600);
+	setcookie('CUWALastWeblogin', '', time() - 3600);
+	setcookie('cuweblogin2', '', time() - 3600);
   }
   if ($logout_url) {
     drupal_goto($logout_url);
