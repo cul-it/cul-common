@@ -57,7 +57,7 @@ function cu_authenticate($destination='', $permit='') {
   } else {
     $destination=urlencode(request_uri());
   }
-  
+
   $netID = getenv('REMOTE_USER');
   if (isset($netID) && $netID != '') {
     return $netID;
@@ -71,7 +71,7 @@ function cu_authenticate($destination='', $permit='') {
     if (!empty($permit)) {
     	$permit .= "/"; // permit names used as subdirectory names under authenticate
     	$path = drupal_get_path('module','cul_common') . '/authenticate/' . $permit . 'index.php';
-    	if (!file_exists($path)) 
+    	if (!file_exists($path))
     		return FALSE;	// unexpected permit
     	}
     drupal_goto(drupal_get_path('module','cul_common') . '/authenticate/' . $permit . 'index.php', 'destination=' . $destination);
@@ -112,16 +112,16 @@ function cuwebauth_logout_from_url() {
 
 
 function get_cuwebauth($node) {
-    return db_result(db_query('SELECT nid FROM {cuwebauth} where nid = (%d)', $node->nid));
+    return db_query('SELECT nid FROM {cuwebauth} where nid = (%d)', array($node->nid))->fetchObject();
 }
 
 function manage_cuwebuath($node) {
    if (isset($node->cuwebauth)) {
      $cuwebauth = get_cuwebauth($node);
      if ($node->cuwebauth && ! $cuwebauth) {
-       db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', $node->nid);
+       db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', array($node->nid));
      } else if (! $node->cuwebauth && $cuwebauth) {
-       db_query('DELETE FROM {cuwebauth} WHERE nid = %d', $node->nid);
+       db_query('DELETE FROM {cuwebauth} WHERE nid = %d', array($node->nid));
      }
    }
 }

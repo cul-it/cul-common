@@ -6,20 +6,6 @@
  */
 
 /**
- * Implementation of hook_install().
- */
-function cul_common_install() {
-  drupal_install_schema('cul_common');
-}
-
-/**
- * Implementation of hook_uninstall().
- */
-function cul_common_uninstall() {
-  drupal_uninstall_schema('cul_common');
-}
-
-/**
  * Implementation of hook_schema().
  */
 function cul_common_schema() {
@@ -29,7 +15,7 @@ function cul_common_schema() {
                 'type' => 'int',
                 'unsigned' => TRUE,
                 'not null' => TRUE,
-                'description' => t('Drupal node ID of a CUWebAuth protected node.'),
+                'description' => 'Drupal node ID of a CUWebAuth protected node.',
              ),
          ),
          'primary key' => array('nid',),
@@ -40,30 +26,30 @@ function cul_common_schema() {
             'type' => 'varchar',
             'length' => 10,
             'not null' => TRUE,
-            'description' => t('Cornell Net ID.'),
+            'description' => 'Cornell Net ID.',
          ),
         'patron_id' => array(
             'type' => 'int',
             'length' => 12,
             'unsigned' => TRUE,
             'not null' => TRUE,
-            'description' => t('The patron_id field retrieved from the Voyager database.'),
+            'description' => 'The patron_id field retrieved from the Voyager database.',
          ),
         'patron_barcode' => array(
             'type' => 'varchar',
             'length' => 50,
             'not null' => TRUE,
-            'description' => t('The patron barcode field retrieved from the Voyager database.'),
+            'description' => 'The patron barcode field retrieved from the Voyager database.',
          ),
          'first_name' => array(
             'type' => 'varchar',
             'length' => 50,
-            'description' => t('Last name of patron retrieved from Voyager database.'),
+            'description' => 'Last name of patron retrieved from Voyager database.',
          ),
          'last_name' => array(
             'type' => 'varchar',
             'length' => 50,
-            'description' => t('First name of patron retrieved from Voyager database.'),
+            'description' => 'First name of patron retrieved from Voyager database.',
          ),
      ),
      'indexes' => array(
@@ -73,5 +59,4 @@ function cul_common_schema() {
     );
     return $schema;
 }
-
 

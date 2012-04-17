@@ -26,9 +26,7 @@ function cul_common_init() {
       cul_common_nodeapi($node, 'view', NULL, TRUE);
     }
   }
-  drupal_set_html_head('<script src="https://embanner.univcomm.cornell.edu/OWC-emergency-banner.js"
-type="text/javascript"> </script>');
-  //drupal_add_js('https://embanner.univcomm.cornell.edu/OWC-emergency-banner.js', 'external');
+  drupal_add_js('https://embanner.univcomm.cornell.edu/OWC-emergency-banner.js', 'external');
 }
 
 /**
@@ -83,39 +81,45 @@ function cul_common_form_alter(&$form, $form_state, $form_id) {
   }
 }
 
+
 /**
- * Implementation of hook_nodeapi().
- *
- * We will implement several node API operations here. This hook allows us to
- * act on all major node operations, so we can manage our additional data
- * appropriately.
- *
- * NOTE: this does not address how protected content in search results and RSS
- * feeds should be handled, and this should be updated once we decide how those
- * should be handled. See http://api.drupal.org/api/function/hook_nodeapi for
- * the $op values of "rss item" and "search result".
+ * NOTE: the following node hooks do not address how protected content
+ *       in search results and RSS feeds should be handled,
+ *       and this should be updated once we decide how those should be handled.
+*/
+
+/**
+ * Implements hook_node_load().
  */
-function cul_common_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'load':
-      return array('cuwebauth' => get_cuwebauth($node));
-      break;
-    case 'insert':
-      manage_cuwebuath($node);
-      break;
-    case 'update':
-      manage_cuwebuath($node);
-      break;
-    case 'delete':
-      manage_cuwebuath($node);
-      break;
-    case 'view':
-      if ((! can_bypass_auth()) && get_cuwebauth($node)) {
-        cu_authenticate();
-      }
-      break;
+function cul_common_node_load($nodes, $types) {
+  foreach ($nodes as $node) {
+    $node->cuwebauth = get_cuwebauth($node);
   }
 }
+
+/**
+ * Implements hook_node_update().
+ */
+function cul_common_node_update($node) {
+  manage_cuwebuath($node);
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function cul_common_node_insert($node) {
+  manage_cuwebuath($node);
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function cul_common_node_view($node) {
+  if ((! can_bypass_auth()) && get_cuwebauth($node)) {
+    cu_authenticate();
+  }
+}
+
 
 /**
  * Implementation of hook_mail_alter().
