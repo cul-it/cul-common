@@ -78,7 +78,8 @@ function cu_authenticate($destination = '', $permit = '') {
         return FALSE; // unexpected permit
       }
     }
-    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php', array('query' => array('destination' => '\\\' . $destination')));
+    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php', 
+    	array('query' => drupal_get_destination()));
   }
 }
 
