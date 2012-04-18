@@ -52,7 +52,7 @@ $url['path'] = $db['database'];
 // - 2 means CLIENT_FOUND_ROWS: return the number of found
 //   (matched) rows, not the number of affected rows.
 $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
-if (!$connection || !mysql_select_db(substr($url['path'], 1))) {
+if (!$connection || !mysql_select_db($url['path'])) {
   // Show error screen otherwise
   echo mysql_error();
 }
@@ -69,8 +69,6 @@ else {
   }
 }
 mysql_close($connection);
-
-die ('done with database');
 
 $netid = getenv('REMOTE_USER');
 if (isset($netid) && $netid) {
