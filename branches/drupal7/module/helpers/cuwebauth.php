@@ -112,7 +112,9 @@ function cuwebauth_logout_from_url() {
 
 
 function get_cuwebauth($node) {
-    return db_query('SELECT nid FROM {cuwebauth} where nid = :nid', array(':nid' -> $node->nid))->fetchObject();
+    return db_query('SELECT nid FROM {cuwebauth} where nid = :nid', 
+    array(':nid' -> $node->nid)
+    )->fetchObject();
 }
 
 function manage_cuwebuath($node) {
