@@ -46,7 +46,7 @@ $url['host'] = empty($db['port']) ? $db['host'] : $db['host'] . ':' . $db['port'
 $url['path'] = $db['database'];
 
 print_r($url);
-die 'trying';
+die ('trying');
 
 // - TRUE makes mysql_connect() always open a new link, even if
 //   mysql_connect() was called before with the same parameters.
