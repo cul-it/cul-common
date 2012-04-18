@@ -128,6 +128,7 @@ function get_cuwebauth($node) {
 		  ->condition('nid', $node->nid)
 		  ->execute();
 		*/
+		}
 	else {
 		return false;
 		}
