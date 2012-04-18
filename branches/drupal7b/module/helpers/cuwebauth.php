@@ -79,7 +79,7 @@ function cu_authenticate($destination = '', $permit = '') {
       }
     }
     drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php', 
-    	array('query' => drupal_get_destination()));
+    	array('query' => array('destination' => $destination)));
   }
 }
 
