@@ -20,6 +20,7 @@ $settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/sett
 require_once $settings_path;
 
 $secret = '';
+/*
 $url = parse_url($db_url);
 
 // Decode url-encoded information in the db connection string
@@ -33,6 +34,16 @@ $url['path'] = urldecode($url['path']);
 if (isset($url['port'])) {
   $url['host'] = $url['host'] . ':' . $url['port'];
 }
+*/
+
+/*
+	 Drupal 7 settings.php is different
+*/
+$db = $databases['default']['default'];
+$url['user'] = $db['username'];
+$url['pass'] = $db['password'];
+$url['host'] = empty($db['port']) ? $db['host'] : $db['host'] . ':' . $db['port'];
+$url['path'] = $db['database'];
 
 // - TRUE makes mysql_connect() always open a new link, even if
 //   mysql_connect() was called before with the same parameters.
