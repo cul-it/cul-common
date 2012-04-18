@@ -125,7 +125,7 @@ function manage_cuwebuath($node) {
        db_insert('cuwebauth')->fields(array('nid'  => $node->nid))->execute();
      } else if (! $node->cuwebauth && $cuwebauth) {
        //db_query('DELETE FROM {cuwebauth} WHERE nid = %d', array($node->nid));
-       db_delete('cuwebauth')->condition('nid',  $edit['alid')->execute();
+       db_delete('cuwebauth')->condition('nid',  $edit['alid'])->execute();
 
      }
    }
