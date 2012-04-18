@@ -8,10 +8,10 @@
  *
  */
 
-require_once DRUPAL_ROOT . '/' . dirname(__FILE__) . '/helpers/cuwebauth.php';
-require_once DRUPAL_ROOT . '/' . dirname(__FILE__) . '/helpers/voyager.php';
-require_once DRUPAL_ROOT . '/' . dirname(__FILE__) . '/helpers/ldap.php';
-require_once DRUPAL_ROOT . '/' . dirname(__FILE__) . '/helpers/json.php';
+require_once(dirname(__FILE__) . '/helpers/cuwebauth.php');
+require_once(dirname(__FILE__) . '/helpers/voyager.php');
+require_once(dirname(__FILE__) . '/helpers/ldap.php');
+require_once(dirname(__FILE__) . '/helpers/json.php');
 
 /**
  * Implements hook_init().
