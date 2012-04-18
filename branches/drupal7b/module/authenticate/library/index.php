@@ -9,7 +9,7 @@ echo "<br />absolute: $absolutepath" . PHP_EOL;
 echo "<br />docroot: $docroot" . PHP_EOL;
 echo "<br />dirname(__FILE__): " . dirname(__FILE__) . PHP_EOL;
 echo "<br />realpath(dirname(__FILE__)): " . realpath((dirname(__FILE__))) . PHP_EOL;
-
+echo "<br />trial: " . realpath(dirname(__FILE__) . '/../index.php') . PHP_EOL;
 include $docroot."/sites/all/modules/custom/cul_common/authenticate/index.php";
 
 //include DRUPAL_ROOT . '/' . realpath(dirname(__FILE__) . '/' . '../index.php');
