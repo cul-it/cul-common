@@ -16,7 +16,7 @@
 		dirname(dirname(dirname(dirname(dirname(dirname(... sites		
 */
 
-$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
+$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/settings.php');
 require_once $settings_path;
 
 $secret = '';
