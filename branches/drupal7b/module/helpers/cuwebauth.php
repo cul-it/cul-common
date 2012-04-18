@@ -70,7 +70,7 @@ function cu_authenticate($destination = '', $permit = '') {
     //bring the user back to the path they started with, try to avoid the internal node number.
     //assumes use of 'friendly' URL's
     get_and_set_cuwa_secret();
-    unset($_REQUEST['destination']);
+    unset($_GET['destination']);
     if (!empty($permit)) {
       $permit .= "/"; // permit names used as subdirectory names under authenticate
       $path = drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php';
@@ -78,7 +78,7 @@ function cu_authenticate($destination = '', $permit = '') {
         return FALSE; // unexpected permit
       }
     }
-    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php', 'destination=' . $destination);
+    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php', array('query' => array('destination' => '\\\' . $destination')));
   }
 }
 
@@ -88,15 +88,15 @@ function cu_authenticate($destination = '', $permit = '') {
 function cuwebauth_logout($logout_url = NULL, $include_cuwa_cookies = FALSE) {
   unset($_COOKIE['netid']);
   unset($_COOKIE['verify_netid']);
-  setcookie('netid', '', time() - 3600);
-  setcookie('verify_netid', '', time() - 3600);
+  setcookie('netid', '', REQUEST_TIME - 3600);
+  setcookie('verify_netid', '', REQUEST_TIME - 3600);
   if ($include_cuwa_cookies) {
     unset($_COOKIE['cuwltgttime']);
     unset($_COOKIE['CUWALastWeblogin']);
     unset($_COOKIE['cuweblogin2']);
-    setcookie('cuwltgttime', '', time() - 3600);
-    setcookie('CUWALastWeblogin', '', time() - 3600);
-    setcookie('cuweblogin2', '', time() - 3600);
+    setcookie('cuwltgttime', '', REQUEST_TIME - 3600);
+    setcookie('CUWALastWeblogin', '', REQUEST_TIME - 3600);
+    setcookie('cuweblogin2', '', REQUEST_TIME - 3600);
   }
   if ($logout_url) {
     drupal_goto($logout_url);
@@ -116,17 +116,27 @@ function cuwebauth_logout_from_url() {
 
 
 function get_cuwebauth($node) {
-  return db_result(db_query('SELECT nid FROM {cuwebauth} where nid = (%d)', $node->nid));
+  return db_query('SELECT nid FROM {cuwebauth} where nid = (%d)', $node->nid)->fetchField();
 }
 
 function manage_cuwebuath($node) {
   if (isset($node->cuwebauth)) {
     $cuwebauth = get_cuwebauth($node);
     if ($node->cuwebauth && ! $cuwebauth) {
-      db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', $node->nid);
+      // TODO Please review the conversion of this statement to the D7 database API syntax.
+      /* db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', $node->nid) */
+      $id = db_insert('cuwebauth')
+  ->fields(array(
+    'nid' => $node->nid,
+  ))
+  ->execute();
     }
     else if (! $node->cuwebauth && $cuwebauth) {
-      db_query('DELETE FROM {cuwebauth} WHERE nid = %d', $node->nid);
+      // TODO Please review the conversion of this statement to the D7 database API syntax.
+      /* db_query('DELETE FROM {cuwebauth} WHERE nid = %d', $node->nid) */
+      db_delete('cuwebauth')
+  ->condition('nid', $node->nid)
+  ->execute();
     }
   }
 }

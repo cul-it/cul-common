@@ -59,5 +59,5 @@ function get_ldap_json() {
   if (isset($_GET['return_fields'])) {
     $return_fields = urldecode($_GET['return_fields']);
   }
-  drupal_json(get_ldap_data($return_fields));
+  drupal_json_output(get_ldap_data($return_fields));
 }

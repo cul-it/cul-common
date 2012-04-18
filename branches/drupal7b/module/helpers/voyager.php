@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function _set_oracle_error_message($message, $stid = 0) {
   if ($stid) {
     $err = oci_error($stid);
@@ -73,7 +77,17 @@ function get_voyager_patron_data($force_refresh = FALSE) {
   if (! $output) {
     $output = _get_voyager_patron_data();
     if ($output) {
-      db_query('INSERT INTO {cache_patron_data} (netid, patron_id, patron_barcode, first_name, last_name) VALUES ("%s", %d, "%s", "%s", "%s")', $netid, $output['patron_id'], $output['patron_barcode'], $output['first_name'], $output['last_name']);
+      // TODO Please review the conversion of this statement to the D7 database API syntax.
+      /* db_query('INSERT INTO {cache_patron_data} (netid, patron_id, patron_barcode, first_name, last_name) VALUES ("%s", %d, "%s", "%s", "%s")', $netid, $output['patron_id'], $output['patron_barcode'], $output['first_name'], $output['last_name']) */
+      $id = db_insert('cache_patron_data')
+  ->fields(array(
+    'netid' => $netid,
+    'patron_id' => $output['patron_id'],
+    'patron_barcode' => $output['patron_barcode'],
+    'first_name' => $output['first_name'],
+    'last_name' => $output['last_name'],
+  ))
+  ->execute();
     }
   }
   else {
@@ -94,7 +108,7 @@ function get_voyager_patron_json() {
   if (isset($_GET['force_refresh']) && $_GET['force_refresh']) {
     $force_refresh = TRUE;
   }
-  drupal_json(get_voyager_patron_data($force_refresh));
+  drupal_json_output(get_voyager_patron_data($force_refresh));
 }
 
 /**

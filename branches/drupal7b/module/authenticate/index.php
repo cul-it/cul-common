@@ -1,7 +1,7 @@
 <?php
 
 $settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
-require_once $settings_path;
+require_once DRUPAL_ROOT . '/' . $settings_path;
 
 $secret = '';
 $url = parse_url($db_url);
@@ -58,6 +58,8 @@ header('Location: http://' . $_SERVER['HTTP_HOST'] . $destination);
 exit();
 
 ?>
+
+
 
 
 

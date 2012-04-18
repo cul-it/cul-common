@@ -1,3 +1,4 @@
 <?php
-include realpath(dirname(__FILE__) . '/' . '../index.php');
+include DRUPAL_ROOT . '/' . realpath(dirname(__FILE__) . '/' . '../index.php');
 ?>
+

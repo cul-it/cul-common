@@ -23,7 +23,7 @@ function output_json_string($json) {
   # drupal_json() doesn't work when you have a json string for some reason
   # even when I try to trick it with PHP's json_encode(), json_decode() combo
   # but the following works, based on code of drupal_json
-  drupal_set_header('Content-Type: text/javascript; charset=utf-8');
+  drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
   echo $json;
 }
 
