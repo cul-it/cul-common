@@ -45,9 +45,6 @@ $url['pass'] = $db['password'];
 $url['host'] = empty($db['port']) ? $db['host'] : $db['host'] . ':' . $db['port'];
 $url['path'] = $db['database'];
 
-print_r($url);
-die ('trying');
-
 // - TRUE makes mysql_connect() always open a new link, even if
 //   mysql_connect() was called before with the same parameters.
 //   This is important if you are using two databases on the same
@@ -72,6 +69,8 @@ else {
   }
 }
 mysql_close($connection);
+
+die ('done with database');
 
 $netid = getenv('REMOTE_USER');
 if (isset($netid) && $netid) {
