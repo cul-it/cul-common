@@ -112,16 +112,19 @@ function cuwebauth_logout_from_url() {
 
 
 function get_cuwebauth($node) {
-    return db_query('SELECT nid FROM {cuwebauth} where nid = (%d)', array($node->nid))->fetchObject();
+    return db_query('SELECT nid FROM {cuwebauth} where nid = :nid', array(':nid' -> $node->nid))->fetchObject();
 }
 
 function manage_cuwebuath($node) {
    if (isset($node->cuwebauth)) {
      $cuwebauth = get_cuwebauth($node);
      if ($node->cuwebauth && ! $cuwebauth) {
-       db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', array($node->nid));
+       //db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', array($node->nid));
+       $id = db_insert('cuwebauth')->fields(array('nid'  => $node->nid)->execute();
      } else if (! $node->cuwebauth && $cuwebauth) {
-       db_query('DELETE FROM {cuwebauth} WHERE nid = %d', array($node->nid));
+       //db_query('DELETE FROM {cuwebauth} WHERE nid = %d', array($node->nid));
+       db_delete('cuwebauth')->condition('nid',  $edit['alid')->execute();
+
      }
    }
 }
