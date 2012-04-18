@@ -18,7 +18,7 @@
 
 //$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
 //require_once DRUPAL_ROOT . '/' . $settings_path;
-$localpath=getenv("SCRIPT_NAME");
+$localpath=$_SERVER['SCRIPT_NAME'];
 $absolutepath=realpath($localpath);
 // a fix for Windows slashes
 $absolutepath=str_replace("\\","/",$absolutepath);
