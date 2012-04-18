@@ -1,7 +1,29 @@
 <?php
 
-$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
-require_once DRUPAL_ROOT . '/' . $settings_path;
+/* relative path to settings.php
+	this file
+		<<drupal_root>>/sites/all/modules/custom/cul_common/authenticate/index.php
+	settings
+		<<drupal_root>>/sites/default/settings.php
+	path
+		../../../../../default/settings.php
+	use dirname
+		dirname(__FILE__)	authenticate
+		dirname(dirname(... cul_common
+		dirname(dirname(dirname(... custom
+		dirname(dirname(dirname(dirname(... modules
+		dirname(dirname(dirname(dirname(dirname(... all
+		dirname(dirname(dirname(dirname(dirname(dirname(... sites		
+*/
+
+//$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../default/settings.php');
+//require_once DRUPAL_ROOT . '/' . $settings_path;
+$localpath=getenv("SCRIPT_NAME");
+$absolutepath=realpath($localPath);
+// a fix for Windows slashes
+$absolutepath=str_replace("\\","/",$absolutepath);
+$docroot=substr($absolutepath,0,strpos($absolutepath,$localpath));
+require_once $docroot."/sites/default/settings.php";
 
 $secret = '';
 $url = parse_url($db_url);
