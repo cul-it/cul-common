@@ -15,7 +15,7 @@ $url['path'] = urldecode($url['path']);
 
 // Allow for non-standard MySQL port.
 if (isset($url['port'])) {
-    $url['host'] = $url['host'] .':'. $url['port'];
+  $url['host'] = $url['host'] . ':' . $url['port'];
 }
 
 // - TRUE makes mysql_connect() always open a new link, even if
@@ -26,25 +26,27 @@ if (isset($url['port'])) {
 //   (matched) rows, not the number of affected rows.
 $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
 if (!$connection || !mysql_select_db(substr($url['path'], 1))) {
-    // Show error screen otherwise
-    echo mysql_error();
-} else {
-    $table_name = $db_prefix . 'cache';
-    $result = mysql_query('SELECT data from ' . $table_name . ' WHERE cid = "cuwa_net_id_secret"');
-    if (!$result) {
-        die('Invalid query: ' . mysql_error());
-    } else {
-        while ($row = mysql_fetch_assoc($result)) {
-            $secret = $row['data'];
-        }
+  // Show error screen otherwise
+  echo mysql_error();
+}
+else {
+  $table_name = $db_prefix . 'cache';
+  $result = mysql_query('SELECT data from ' . $table_name . ' WHERE cid = "cuwa_net_id_secret"');
+  if (!$result) {
+    die('Invalid query: ' . mysql_error());
+  }
+  else {
+    while ($row = mysql_fetch_assoc($result)) {
+      $secret = $row['data'];
     }
+  }
 }
 mysql_close($connection);
 
 $netid = getenv('REMOTE_USER');
 if (isset($netid) && $netid) {
-    setcookie('netid', $netid, 0, '/', '.cornell.edu');
-    setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
+  setcookie('netid', $netid, 0, '/', '.cornell.edu');
+  setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
 
 $destination = $_GET['destination'];
@@ -56,4 +58,6 @@ header('Location: http://' . $_SERVER['HTTP_HOST'] . $destination);
 exit();
 
 ?>
+
+
 

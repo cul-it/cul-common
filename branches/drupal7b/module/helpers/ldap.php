@@ -7,7 +7,7 @@
  * @link http://identity.cit.cornell.edu/ds/index.html .
  *
  */
-function get_ldap_data($return_fields=NULL, $netid=NULL) {
+function get_ldap_data($return_fields = NULL, $netid = NULL) {
   if ($netid == NULL) {
     $netid = cu_authenticate();
   }
@@ -22,17 +22,18 @@ function get_ldap_data($return_fields=NULL, $netid=NULL) {
                            'cornellEduCampusPhone',
                            'Mail',
                          );
-  } else if (is_string($return_fields)) {
+  }
+  else if (is_string($return_fields)) {
     $return_fields = split(',', $return_fields);
   }
 
-  if ($ds=ldap_connect("directory.cornell.edu")) {
-    $r=ldap_bind($ds);
-    $sr=ldap_search($ds,"ou=People,o=Cornell University,c=US", "uid=$netid", $return_fields);
+  if ($ds = ldap_connect("directory.cornell.edu")) {
+    $r = ldap_bind($ds);
+    $sr = ldap_search($ds, "ou=People,o=Cornell University,c=US", "uid=$netid", $return_fields);
 
     if ($entries = ldap_get_entries($ds, $sr)) {
       $output = array();
-      for ($i=0; $i < count($return_fields); $i++) {
+      for ($i = 0; $i < count($return_fields); $i++) {
         $attr_name = $entries[0][$i];
         if ($attr_name != '') {
           $value = $entries[0][$attr_name][0];
@@ -42,7 +43,8 @@ function get_ldap_data($return_fields=NULL, $netid=NULL) {
     }
 
     ldap_close($ds);
-  } else {
+  }
+  else {
     watchdog('cul_common (LDAP data)', 'Could not connect to LDAP server', array(), WATGHDOG_ERROR);
   }
   return $output;

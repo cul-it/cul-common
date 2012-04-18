@@ -51,37 +51,41 @@ function verify_netid() {
  * Basic authentication method, redirects to a CUWebAuth protected directory,
  * and upon successful authentication, it will set a 'netid' cookie.
  */
-function cu_authenticate($destination='', $permit='') {
+function cu_authenticate($destination = '', $permit = '') {
   if (isset($destination) && $destination != '') {
-    $destination=urlencode($destination);
-  } else {
-    $destination=urlencode(request_uri());
+    $destination = urlencode($destination);
   }
-  
+  else {
+    $destination = urlencode(request_uri());
+  }
+
   $netID = getenv('REMOTE_USER');
   if (isset($netID) && $netID != '') {
     return $netID;
-  } else if (verify_netid()) {
+  }
+  else if (verify_netid()) {
     return $_COOKIE['netid'];
-  } else {
+  }
+  else {
     //bring the user back to the path they started with, try to avoid the internal node number.
     //assumes use of 'friendly' URL's
     get_and_set_cuwa_secret();
     unset($_REQUEST['destination']);
     if (!empty($permit)) {
-    	$permit .= "/"; // permit names used as subdirectory names under authenticate
-    	$path = drupal_get_path('module','cul_common') . '/authenticate/' . $permit . 'index.php';
-    	if (!file_exists($path)) 
-    		return FALSE;	// unexpected permit
-    	}
-    drupal_goto(drupal_get_path('module','cul_common') . '/authenticate/' . $permit . 'index.php', 'destination=' . $destination);
+      $permit .= "/"; // permit names used as subdirectory names under authenticate
+      $path = drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php';
+      if (!file_exists($path)) {
+        return FALSE; // unexpected permit
+      }
+    }
+    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php', 'destination=' . $destination);
   }
 }
 
 /**
  * Simulate a CUWebAuth logout.
  */
-function cuwebauth_logout($logout_url=NULL, $include_cuwa_cookies=FALSE) {
+function cuwebauth_logout($logout_url = NULL, $include_cuwa_cookies = FALSE) {
   unset($_COOKIE['netid']);
   unset($_COOKIE['verify_netid']);
   setcookie('netid', '', time() - 3600);
@@ -90,9 +94,9 @@ function cuwebauth_logout($logout_url=NULL, $include_cuwa_cookies=FALSE) {
     unset($_COOKIE['cuwltgttime']);
     unset($_COOKIE['CUWALastWeblogin']);
     unset($_COOKIE['cuweblogin2']);
-	setcookie('cuwltgttime', '', time() - 3600);
-	setcookie('CUWALastWeblogin', '', time() - 3600);
-	setcookie('cuweblogin2', '', time() - 3600);
+    setcookie('cuwltgttime', '', time() - 3600);
+    setcookie('CUWALastWeblogin', '', time() - 3600);
+    setcookie('cuweblogin2', '', time() - 3600);
   }
   if ($logout_url) {
     drupal_goto($logout_url);
@@ -112,38 +116,40 @@ function cuwebauth_logout_from_url() {
 
 
 function get_cuwebauth($node) {
-    return db_result(db_query('SELECT nid FROM {cuwebauth} where nid = (%d)', $node->nid));
+  return db_result(db_query('SELECT nid FROM {cuwebauth} where nid = (%d)', $node->nid));
 }
 
 function manage_cuwebuath($node) {
-   if (isset($node->cuwebauth)) {
-     $cuwebauth = get_cuwebauth($node);
-     if ($node->cuwebauth && ! $cuwebauth) {
-       db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', $node->nid);
-     } else if (! $node->cuwebauth && $cuwebauth) {
-       db_query('DELETE FROM {cuwebauth} WHERE nid = %d', $node->nid);
-     }
-   }
+  if (isset($node->cuwebauth)) {
+    $cuwebauth = get_cuwebauth($node);
+    if ($node->cuwebauth && ! $cuwebauth) {
+      db_query('INSERT INTO {cuwebauth} (nid) VALUES (%d)', $node->nid);
+    }
+    else if (! $node->cuwebauth && $cuwebauth) {
+      db_query('DELETE FROM {cuwebauth} WHERE nid = %d', $node->nid);
+    }
+  }
 }
 
 
-function get_random_string($length=10, $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') {
-    $string = '';
-    for ($p = 0; $p < $length; $p++) {
-        $string .= $characters[mt_rand(0, strlen($characters)-1)];
-    }
-    return $string;
+function get_random_string($length = 10, $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') {
+  $string = '';
+  for ($p = 0; $p < $length; $p++) {
+    $string .= $characters[mt_rand(0, strlen($characters) -1)];
+  }
+  return $string;
 }
 
-function get_and_set_cuwa_secret($refresh=FALSE) {
-    static $cuwa_secret;
-    global $cuwa_secret_cache_name;
-    if (($cached = cache_get($cuwa_secret_cache_name, 'cache')) && ! empty($cached->data) && ! $refresh) {
-        $cuwa_secret = $cached->data;
-    } else {
-        $cuwa_secret = get_random_string();
-        cache_set($cuwa_secret_cache_name, $cuwa_secret, 'cache');
-    }
-    return $cuwa_secret;
+function get_and_set_cuwa_secret($refresh = FALSE) {
+  static $cuwa_secret;
+  global $cuwa_secret_cache_name;
+  if (($cached = cache_get($cuwa_secret_cache_name, 'cache')) && ! empty($cached->data) && ! $refresh) {
+    $cuwa_secret = $cached->data;
+  }
+  else {
+    $cuwa_secret = get_random_string();
+    cache_set($cuwa_secret_cache_name, $cuwa_secret, 'cache');
+  }
+  return $cuwa_secret;
 }
 

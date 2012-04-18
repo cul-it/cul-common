@@ -1,19 +1,21 @@
 <?php
 
-function _set_oracle_error_message($message, $stid=0) {
+function _set_oracle_error_message($message, $stid = 0) {
   if ($stid) {
     $err = oci_error($stid);
-  } else {
+  }
+  else {
     $err = oci_error();
   }
-  $message ='ERROR: ' . $message . ' ' . $err['message'];
+  $message = 'ERROR: ' . $message . ' ' . $err['message'];
   watchdog('cul_common (voyager database)', $message, array(), WATGHDOG_ERROR);
 }
 
 function get_voyager_connection() {
   if ($conn = oci_connect("dbread", "dbread", "//database.library.cornell.edu:1521/VGER")) {
     return $conn;
-  } else {
+  }
+  else {
     _set_oracle_error_message('Oracle could not establish a connection.');
     return null;
   }
@@ -49,7 +51,8 @@ function _get_voyager_patron_data() {
         $output['first_name'] = $fn;
         $output['last_name'] = $ln;
       }
-    } else {
+    }
+    else {
       _set_oracle_error_message('Query failed', $stid);
     }
     oci_close($conn);
@@ -63,7 +66,7 @@ function _get_voyager_patron_data() {
  * Cached results are retrieved unless a refresh is forced.
  *
  */
-function get_voyager_patron_data($force_refresh=FALSE) {
+function get_voyager_patron_data($force_refresh = FALSE) {
   $netid = cu_authenticate();
   $output = db_fetch_array(db_query('SELECT patron_id, patron_barcode, first_name, last_name FROM {cache_patron_data} where netid = "%s"', $netid));
 
@@ -72,11 +75,12 @@ function get_voyager_patron_data($force_refresh=FALSE) {
     if ($output) {
       db_query('INSERT INTO {cache_patron_data} (netid, patron_id, patron_barcode, first_name, last_name) VALUES ("%s", %d, "%s", "%s", "%s")', $netid, $output['patron_id'], $output['patron_barcode'], $output['first_name'], $output['last_name']);
     }
-  } else {
-      if ($force_refresh) {
-        $output = _get_voyager_patron_data();
-        db_query('update {cache_patron_data} set patron_id = %d, patron_barcode = "%s", first_name = "%s", last_name = "%s" where netid = "%s"', $output['patron_id'], $output['patron_barcode'], $output['first_name'], $output['last_name'], $netid);
-      }
+  }
+  else {
+    if ($force_refresh) {
+      $output = _get_voyager_patron_data();
+      db_query('update {cache_patron_data} set patron_id = %d, patron_barcode = "%s", first_name = "%s", last_name = "%s" where netid = "%s"', $output['patron_id'], $output['patron_barcode'], $output['first_name'], $output['last_name'], $netid);
+    }
   }
   return $output;
 }

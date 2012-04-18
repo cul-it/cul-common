@@ -23,7 +23,7 @@ function cul_common_uninstall() {
  * Implementation of hook_schema().
  */
 function cul_common_schema() {
-    $schema['cuwebauth'] = array(
+  $schema['cuwebauth'] = array(
         'fields' => array(
             'nid' => array(
                 'type' => 'int',
@@ -34,7 +34,7 @@ function cul_common_schema() {
          ),
          'primary key' => array('nid',),
     );
-    $schema['cache_patron_data'] = array(
+  $schema['cache_patron_data'] = array(
     'fields' => array(
         'netid' => array(
             'type' => 'varchar',
@@ -71,7 +71,7 @@ function cul_common_schema() {
      ),
      'primary key' => array('netid',),
     );
-    return $schema;
+  return $schema;
 }
 
 
