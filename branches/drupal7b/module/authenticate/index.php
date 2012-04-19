@@ -20,25 +20,7 @@ $settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/sett
 require_once $settings_path;
 
 $secret = '';
-/*
-$url = parse_url($db_url);
 
-// Decode url-encoded information in the db connection string
-$url['user'] = urldecode($url['user']);
-// Test if database url has a password.
-$url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : '';
-$url['host'] = urldecode($url['host']);
-$url['path'] = urldecode($url['path']);
-
-// Allow for non-standard MySQL port.
-if (isset($url['port'])) {
-  $url['host'] = $url['host'] . ':' . $url['port'];
-}
-*/
-
-/*
-	 Drupal 7 settings.php is different
-*/
 $db = $databases['default']['default'];
 $url['user'] = $db['username'];
 $url['pass'] = $db['password'];
@@ -80,6 +62,9 @@ $destination = $_GET['destination'];
 if (! isset($_GET['destination']) || $_GET['destination'] == '') {
   $destination = '/';
 }
+
+print_r($_GET);
+die ("destination: $destination");
 
 header('Location: http://' . $_SERVER['HTTP_HOST'] . $destination);
 exit();
