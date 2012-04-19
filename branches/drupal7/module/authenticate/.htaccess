@@ -1,3 +1,0 @@
-AuthName CORNELL
-AuthType All
-require valid-user
