@@ -24,7 +24,7 @@ function get_ldap_data($return_fields = NULL, $netid = NULL) {
                          );
   }
   else if (is_string($return_fields)) {
-    $return_fields = split(',', $return_fields);
+    $return_fields = explode(',', $return_fields);
   }
 
   if ($ds = ldap_connect("directory.cornell.edu")) {
