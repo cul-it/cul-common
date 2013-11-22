@@ -194,7 +194,7 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
 /**
  * implementation of hook_node_load
  */
-cul_common_node_load($nodes, $types) {
+function cul_common_node_load($nodes, $types) {
   dsm(array('cul_common_node_load', $nodes));
 }
 
