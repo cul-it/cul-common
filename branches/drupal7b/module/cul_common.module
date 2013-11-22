@@ -85,7 +85,8 @@ function cul_common_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implements hook_node_load().
  */
-function cul_common_node_load($node, $types) {
+function cul_common_node_load($nodes, $types) {
+  dsm(array('cul_common_node_load', $nodes));
   return array('cuwebauth' => get_cuwebauth($node));
 }
 
@@ -189,12 +190,5 @@ function cul_common_nodeapi(&$node, $op, $teaser, $page) {
       }
       break;
   }
-}
-
-/**
- * implementation of hook_node_load
- */
-function cul_common_node_load($nodes, $types) {
-  dsm(array('cul_common_node_load', $nodes));
 }
 
