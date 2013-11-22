@@ -89,7 +89,7 @@ function cul_common_node_load($nodes, $types) {
   //dsm($nodes);
   foreach ($nodes as $nid => $node) {
     dsm($node);
-    if (isset($nodes[$nid]->field_cuwebauth)) {
+    if (method_exists($nodes[$nid], 'field_cuwebauth')) {
       $nodes[$nid]->field_cuwebauth = get_cuwebauth($node);
     }
   }
