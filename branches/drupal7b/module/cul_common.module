@@ -123,6 +123,8 @@ function cul_common_node_delete($node) {
  * Implements hook_node_view().
  */
 function cul_common_node_view($node, $view_mode = 'full') {
+  $protected = get_cuwebauth($node);
+  dsm(array('protected?', $protected));
   if ((! can_bypass_auth()) && get_cuwebauth($node)) {
     cu_authenticate();
   }
