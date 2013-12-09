@@ -75,7 +75,7 @@ function cul_common_form_alter(&$form, $form_state, $form_id) {
     $node = $form['#node'];
     dsm($node);
     $cuwebauth_set = get_cuwebauth($node);
-    dsm(array("is set?",$cuwebauth_set));
+    dsm(array("is set?",$cuwebauth_set, $form_id));
     $form['cuwebauth'] = array(
         '#type' => 'checkbox',
         '#title' => 'Require CUWebLogin?',
