@@ -78,7 +78,7 @@ function cu_authenticate($destination = '', $permit = '') {
         return FALSE; // unexpected permit
       }
     }
-    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php', 
+    drupal_goto(drupal_get_path('module', 'cul_common') . '/authenticate/' . $permit . 'index.php',
     	array('query' => array('destination' => $destination)));
   }
 }
@@ -119,10 +119,10 @@ function cuwebauth_logout_from_url() {
 function get_cuwebauth($node) {
 	if (isset($node->nid)) {
 		$nid = $node->nid;
-		$result = db_query('SELECT nid FROM {cuwebauth} where nid = :nid', 
+		$result = db_query('SELECT nid FROM {cuwebauth} where nid = :nid',
 		array(':nid' => $node->nid));
-		return $result->fetchObject();
-		
+		return $result->fetchColumn();
+
 		/*
 		$result = db_select('cuwebauth', 'c')
 		  ->fields('c', array('nid'))
