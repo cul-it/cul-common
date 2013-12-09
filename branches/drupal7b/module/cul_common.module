@@ -73,13 +73,13 @@ function cul_common_menu() {
 function cul_common_form_alter(&$form, $form_state, $form_id) {
   if (isset($form['#node']) && can_set_auth()) {
     $node = $form['#node'];
-    dsm($node);
+    //dsm($node);
     $cuwebauth_set = get_cuwebauth($node);
-    dsm(array("is set?",$cuwebauth_set, $form_id));
+    //dsm(array("is set?",$cuwebauth_set, $form_id));
     $form['cuwebauth'] = array(
         '#type' => 'checkbox',
         '#title' => 'Require CUWebLogin?',
-        '#default_value' => isset($node->cuwebauth) ? $node->cuwebauth : 0,
+        '#default_value' => $cuwebauth_set ? 1 : 0,
         '#weight' => -10,
       );
   }
