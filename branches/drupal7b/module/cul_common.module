@@ -84,17 +84,6 @@ function cul_common_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implements hook_node_load().
- */
-function cul_common_node_load($nodes, $types) {
-  foreach ($nodes as $nid => $node) {
-    if (FALSE && method_exists($nodes[$nid], 'field_cuwebauth')) {
-      $nodes[$nid]->field_cuwebauth = get_cuwebauth($node);
-    }
-  }
-}
-
-/**
  * Implements hook_node_insert().
  */
 function cul_common_node_insert($node) {
