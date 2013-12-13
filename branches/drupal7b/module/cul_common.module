@@ -66,6 +66,27 @@ function cul_common_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_form_BASE_FORM_ID_alter.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @param  [type] $form_id    [description]
+ * @return [type]             [description]
+ */
+function cul_common_node_form_alter(&$form, &$form_state, $form_id) {
+   dsm(array('cul_common_node_form_alter', $form_id, $form_state));
+    if (isset($form['#node']) && can_set_auth()) {
+      $node = $form['#node'];
+      $cuwebauth_set = get_cuwebauth($node);
+      $form['cuwebauth'] = array(
+          '#type' => 'checkbox',
+          '#title' => 'Require CUWebLogin?',
+          '#default_value' => $cuwebauth_set ? 1 : 0,
+          '#weight' => -10,
+        );
+    }
+}
+
 
 /**
  * Implements hook_form_alter().
