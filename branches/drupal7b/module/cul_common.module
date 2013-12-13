@@ -133,20 +133,10 @@ function cul_common_node_view($node, $view_mode = 'full') {
     cu_authenticate();
   }
 }
-
 /**
- * Implements hook_nodeapi().
- *
- * We will implement several node API operations here. This hook allows us to
- * act on all major node operations, so we can manage our additional data
- * appropriately.
- *
- * NOTE: this does not address how protected content in search results and RSS
- * feeds should be handled, and this should be updated once we decide how those
- * should be handled. See http://api.drupal.org/api/function/hook_nodeapi for
- * the $op values of "rss item" and "search result".
+ * https://api.drupal.org/comment/498#comment-498
+ * no more hook_nodeapi in Drupal 7
  */
-function cul_common_nodeapi_OLD(&$node, $op, $teaser, $page) { }
 
 /**
  * Implementation of hook_mail_alter().
@@ -170,39 +160,5 @@ function cul_common_mail_alter(&$message) {
  */
 function cul_common_cron() {
   get_and_set_cuwa_secret(TRUE);
-}
-
-/**
- * Implementation of hook_nodeapi().
- *
- * We will implement several node API operations here. This hook allows us to
- * act on all major node operations, so we can manage our additional data
- * appropriately.
- *
- * NOTE: this does not address how protected content in search results and RSS
- * feeds should be handled, and this should be updated once we decide how those
- * should be handled. See http://api.drupal.org/api/function/hook_nodeapi for
- * the $op values of "rss item" and "search result".
- */
-function cul_common_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'load':
-      return array('cuwebauth' => get_cuwebauth($node));
-      break;
-    case 'insert':
-      manage_cuwebuath($node);
-      break;
-    case 'update':
-      manage_cuwebuath($node);
-      break;
-    case 'delete':
-      manage_cuwebuath($node);
-      break;
-    case 'view':
-      if ((! can_bypass_auth()) && get_cuwebauth($node)) {
-        cu_authenticate();
-      }
-      break;
-  }
 }
 
