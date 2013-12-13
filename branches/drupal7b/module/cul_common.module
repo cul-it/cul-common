@@ -93,7 +93,7 @@ function cul_common_node_form_alter(&$form, &$form_state, $form_id) {
  * nodes only as per
  * http://drupal.stackexchange.com/questions/43920/how-to-create-hook-for-altering-every-node-form
  */
-function cul_common_form_alter(&$form, $form_state, $form_id) {
+function oldcul_common_form_alter(&$form, $form_state, $form_id) {
   if (strpos($form_id, '_node_form') !== FALSE) {
     dsm(array('cul_common_form_alter', $form_id, $form_state));
     if (isset($form['#node']) && can_set_auth()) {
