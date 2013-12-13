@@ -6,33 +6,18 @@ $cuwa_secret_cache_name = 'cuwa_net_id_secret';
 /**
  * Don't bother admins or various content managers with authentication
  * when they are already authenticated with Drupal.
+ * now based on cul_common_permission
  */
 function can_bypass_auth($roles = NULL) {
-  if ($roles == NULL || ! is_array($roles)) {
-    $roles = array('administrator', 'content manager', 'webvision-admin', 'faq-manager');
-  }
-
-  $can_bypass = FALSE;
-  global $user;
-
-  if (is_array($user->roles)) {
-    foreach ($roles as $role) {
-      if (in_array($role, array_values($user->roles))) {
-        $can_bypass = TRUE;
-        break;
-      }
-    }
-  }
-
-  return $can_bypass;
+  return user_access('bypass cuwebauth');
 }
 
 /**
  * Who is allowed to set CUWebAuth on nodes,
- * for now, this is the same as those who can bypass CUWebAuth
+ * now based on cul_common_permission
  */
 function can_set_auth($roles = NULL) {
-  return can_bypass_auth($roles);
+  return user_access('access cuwebauth checkbox');
 }
 
 function verify_netid() {
