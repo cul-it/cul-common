@@ -68,20 +68,23 @@ function cul_common_menu() {
 
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_alter().
  * nodes only as per
  * http://drupal.stackexchange.com/questions/43920/how-to-create-hook-for-altering-every-node-form
  */
-function cul_common_form_node_form_alter(&$form, &$form_state) {
-  if (isset($form['#node']) && can_set_auth()) {
-    $node = $form['#node'];
-    $cuwebauth_set = get_cuwebauth($node);
-    $form['cuwebauth'] = array(
-        '#type' => 'checkbox',
-        '#title' => 'Require CUWebLogin?',
-        '#default_value' => $cuwebauth_set ? 1 : 0,
-        '#weight' => -10,
-      );
+function cul_common_form_node_form_alter(&$form, $form_state, $form_id) {
+  if (strpos($form_id, '_node_form') !== FALSE) {
+    dsm($form_id);
+    if (isset($form['#node']) && can_set_auth()) {
+      $node = $form['#node'];
+      $cuwebauth_set = get_cuwebauth($node);
+      $form['cuwebauth'] = array(
+          '#type' => 'checkbox',
+          '#title' => 'Require CUWebLogin?',
+          '#default_value' => $cuwebauth_set ? 1 : 0,
+          '#weight' => -10,
+        );
+    }
   }
 }
 
