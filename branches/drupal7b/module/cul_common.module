@@ -70,12 +70,21 @@ function cul_common_menu() {
  * Implements hook_form_BASE_FORM_ID_alter.
  */
 function cul_common_form_node_form_alter(&$form, &$form_state, $form_id) {
-  // Find the content type of the node we are editing.
-  $content_type = $form['#node']->type;
-  // webforms have node_form as a base form id
-  if ($content_type != 'webform') {
-    // Alter the 'article' form here.
-    dsm('cul_common_form_node_form_alter');
+  if (isset($form['#node']) && can_set_auth()) {
+    // Find the content type of the node we are editing.
+    $content_type = $form['#node']->type;
+    // webforms have node_form as a base form id
+    if ($content_type != 'webform') {
+      // Alter the other node forms here.
+      $node = $form['#node'];
+      $cuwebauth_set = get_cuwebauth($node);
+      $form['cuwebauth'] = array(
+        '#type' => 'checkbox',
+        '#title' => 'Require CUWebLogin?',
+        '#default_value' => $cuwebauth_set ? 1 : 0,
+        '#weight' => -10,
+      );
+    }
   }
 }
 
