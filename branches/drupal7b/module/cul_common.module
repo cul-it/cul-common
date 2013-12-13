@@ -14,6 +14,22 @@ require_once(dirname(__FILE__) . '/helpers/ldap.php');
 require_once(dirname(__FILE__) . '/helpers/json.php');
 
 /**
+ * Implements hook_permission.
+ */
+function cul_common_permission() {
+  return array(
+    'access cuwebauth checkbox' => array(
+      'title' => t('Access CUWebAuth checkbox'),
+      'description' => t('Can set CUWebAuth requirement for access to nodes'),
+      ),
+    'bypass cuwebauth' => array(
+      'title' => t('Bypass CUWebAuth'),
+      'description' => t('Can bypass CUWebAuth when required by a node'),
+      ),
+    );
+}
+
+/**
  * Implements hook_init().
  * this implements the patch for panels on http://drupal.org/node/362065
  */
