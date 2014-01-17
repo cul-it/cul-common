@@ -90,7 +90,8 @@ function cul_common_form_node_form_alter(&$form, &$form_state, $form_id) {
     // Find the content type of the node we are editing.
     $content_type = $form['#node']->type;
     // webforms have node_form as a base form id
-    if ($content_type != 'webform') {
+    // trial version without removing checkbox from webforms...
+    if (true || $content_type != 'webform') {
       // Alter the other node forms here.
       $node = $form['#node'];
       $cuwebauth_set = get_cuwebauth($node);
@@ -100,10 +101,6 @@ function cul_common_form_node_form_alter(&$form, &$form_state, $form_id) {
         '#default_value' => $cuwebauth_set ? 1 : 0,
         '#weight' => -10,
       );
-    }
-    else {
-      // jgrdebug
-      dsm($form['#node']);
     }
   }
 }
