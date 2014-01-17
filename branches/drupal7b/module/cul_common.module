@@ -101,6 +101,10 @@ function cul_common_form_node_form_alter(&$form, &$form_state, $form_id) {
         '#weight' => -10,
       );
     }
+    else {
+      // jgrdebug
+      dsm($form['#node']);
+    }
   }
 }
 
