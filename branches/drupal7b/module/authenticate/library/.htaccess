@@ -1,4 +1,3 @@
 AuthName CORNELL
 AuthType All
-require valid-user
 require permit library
