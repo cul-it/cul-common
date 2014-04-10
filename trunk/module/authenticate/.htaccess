@@ -1,3 +1,4 @@
 AuthName CORNELL
 AuthType All
 require valid-user
+require valid-user@CORNELL.EDU
