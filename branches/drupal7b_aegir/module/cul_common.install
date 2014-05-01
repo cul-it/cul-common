@@ -1,0 +1,79 @@
+<?php
+// $Id$
+/**
+ * Install the CUL Common module.
+ * @file
+ */
+
+/**
+ * Implements hook_install().
+ */
+function cul_common_install() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_install_schema('cul_common')
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function cul_common_uninstall() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_uninstall_schema('cul_common')
+}
+
+/**
+ * Implements hook_schema().
+ */
+function cul_common_schema() {
+  $schema['cuwebauth'] = array(
+        'fields' => array(
+            'nid' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'description' => 'Drupal node ID of a CUWebAuth protected node.',
+             ),
+         ),
+         'primary key' => array('nid',),
+    );
+  $schema['cache_patron_data'] = array(
+    'fields' => array(
+        'netid' => array(
+            'type' => 'varchar',
+            'length' => 10,
+            'not null' => TRUE,
+            'description' => 'Cornell Net ID.',
+         ),
+        'patron_id' => array(
+            'type' => 'int',
+            'length' => 12,
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'description' => 'The patron_id field retrieved from the Voyager database.',
+         ),
+        'patron_barcode' => array(
+            'type' => 'varchar',
+            'length' => 50,
+            'not null' => TRUE,
+            'description' => 'The patron barcode field retrieved from the Voyager database.',
+         ),
+         'first_name' => array(
+            'type' => 'varchar',
+            'length' => 50,
+            'description' => 'Last name of patron retrieved from Voyager database.',
+         ),
+         'last_name' => array(
+            'type' => 'varchar',
+            'length' => 50,
+            'description' => 'First name of patron retrieved from Voyager database.',
+         ),
+     ),
+     'indexes' => array(
+        'patron_id' => array('patron_id'),
+     ),
+     'primary key' => array('netid',),
+    );
+  return $schema;
+}
+
+
