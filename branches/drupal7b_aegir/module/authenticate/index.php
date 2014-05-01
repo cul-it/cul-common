@@ -13,10 +13,11 @@
 		dirname(dirname(dirname(... custom
 		dirname(dirname(dirname(dirname(... modules
 		dirname(dirname(dirname(dirname(dirname(... all
-		dirname(dirname(dirname(dirname(dirname(dirname(... sites		
+		dirname(dirname(dirname(dirname(dirname(dirname(... sites
 */
 
-$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/settings.php');
+//$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/settings.php');
+$settings_path = $_SERVER['DOCUMENT_ROOT'] . "/sites/default/settings.php";
 require_once $settings_path;
 
 $secret = '';
