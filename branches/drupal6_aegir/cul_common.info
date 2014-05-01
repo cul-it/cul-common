@@ -1,0 +1,6 @@
+; $Id$
+name = "CUL Common"
+description = "API of commonly needed services, like centralized authentication."
+core = 6.x
+php = 5.x
+package = Cornell University Library
