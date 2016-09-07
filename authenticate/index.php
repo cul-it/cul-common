@@ -71,7 +71,8 @@ if (! isset($_GET['destination']) || $_GET['destination'] == '') {
   $destination = '/';
 }
 
-header('Location: http://' . $_SERVER['HTTP_HOST'] . $destination);
+$url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $destination;
+header('Location: ' . $url);
 exit();
 
 ?>
