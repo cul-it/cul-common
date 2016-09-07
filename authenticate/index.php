@@ -42,6 +42,9 @@ if (!$connection || !mysql_select_db($url['path'])) {
   echo mysql_error();
 }
 else {
+  if (empty($db['prefix'])) {
+    $db['prefix'] = '';
+  }
   $table_name = $db['prefix'] . 'cache';
   $result = mysql_query('SELECT data from ' . $table_name . ' WHERE cid = "cuwa_net_id_secret"');
   if (!$result) {
