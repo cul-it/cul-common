@@ -5,6 +5,8 @@
 		<<drupal_root>>/sites/all/modules/custom/cul_common/authenticate/index.php
 	settings
 		<<drupal_root>>/sites/default/settings.php
+  settings (aegir)
+    <<drupal_root>>/sites/<<domain_name>>/settings.php
 	path
 		../../../../../default/settings.php
 	use dirname
