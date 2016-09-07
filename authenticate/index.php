@@ -18,6 +18,8 @@
 		dirname(dirname(dirname(dirname(dirname(dirname(... sites
 */
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/bootstrap.inc";
+
 //$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/settings.php');
 $settings_path = $_SERVER['DOCUMENT_ROOT'] . "/" . conf_path(FALSE) . "/settings.php";
 require_once $settings_path;
