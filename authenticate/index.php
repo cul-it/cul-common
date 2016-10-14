@@ -1,6 +1,7 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . "/includes/bootstrap.inc";
+define('DRUPAL_ROOT', $_SERVER['DOCUMENT_ROOT']);
+require_once DRUPAL_ROOT . "/includes/bootstrap.inc";
 $settings_path = $_SERVER['DOCUMENT_ROOT'] . conf_path() . "/settings.php";
 require_once $settings_path;
 
