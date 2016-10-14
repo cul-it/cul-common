@@ -1,6 +1,6 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . "includes/bootstrap.inc";
+include $_SERVER['DOCUMENT_ROOT'] . "/includes/bootstrap.inc";
 $settings_path = $_SERVER['DOCUMENT_ROOT'] . conf_path() . "/settings.php";
 require_once $settings_path;
 
