@@ -1,23 +1,6 @@
 <?php
 
-/* relative path to settings.php
-	this file
-		<<drupal_root>>/sites/all/modules/custom/cul_common/authenticate/index.php
-	settings
-		<<drupal_root>>/sites/default/settings.php
-	path
-		../../../../../default/settings.php
-	use dirname
-		dirname(__FILE__)	authenticate
-		dirname(dirname(... cul_common
-		dirname(dirname(dirname(... custom
-		dirname(dirname(dirname(dirname(... modules
-		dirname(dirname(dirname(dirname(dirname(... all
-		dirname(dirname(dirname(dirname(dirname(dirname(... sites
-*/
-
-//$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/settings.php');
-$settings_path = $_SERVER['DOCUMENT_ROOT'] . "/sites/default/settings.php";
+$settings_path = $_SERVER['DOCUMENT_ROOT'] . conf_path() . "/settings.php";
 require_once $settings_path;
 
 $secret = '';
@@ -40,7 +23,12 @@ if (!$connection || !mysql_select_db($url['path'])) {
   echo mysql_error();
 }
 else {
-  $table_name = $db['prefix'] . 'cache';
+  if (empty($db['prefix'])) {
+    $table_name = 'cache';
+  }
+  else {
+    $table_name = $db['prefix'] . 'cache';
+  }
   $result = mysql_query('SELECT data from ' . $table_name . ' WHERE cid = "cuwa_net_id_secret"');
   if (!$result) {
     die('Invalid query: ' . mysql_error());
@@ -64,7 +52,9 @@ if (! isset($_GET['destination']) || $_GET['destination'] == '') {
   $destination = '/';
 }
 
-header('Location: http://' . $_SERVER['HTTP_HOST'] . $destination);
+$url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
+$url .= $_SERVER['HTTP_HOST'] . $destination;
+header('Location: ' . $url);
 exit();
 
 ?>
