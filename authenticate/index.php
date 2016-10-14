@@ -19,7 +19,7 @@
 */
 
 //$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/settings.php');
-$settings_path = $_SERVER['DOCUMENT_ROOT'] . "/sites//" . $_SERVER['SERVER_NAME'] . "/settings.php";
+$settings_path = $_SERVER['DOCUMENT_ROOT'] . conf_path() . "/settings.php";
 require_once $settings_path;
 
 $secret = '';
