@@ -1,25 +1,6 @@
 <?php
 
-/* relative path to settings.php
-	this file
-		<<drupal_root>>/sites/all/modules/custom/cul_common/authenticate/index.php
-	settings
-		<<drupal_root>>/sites/default/settings.php
-  settings (aegir)
-    <<drupal_root>>/sites/<<domain_name>>/settings.php
-	path
-		../../../../../default/settings.php
-	use dirname
-		dirname(__FILE__)	authenticate
-		dirname(dirname(... cul_common
-		dirname(dirname(dirname(... custom
-		dirname(dirname(dirname(dirname(... modules
-		dirname(dirname(dirname(dirname(dirname(... all
-		dirname(dirname(dirname(dirname(dirname(dirname(... sites
-*/
-
-//$settings_path = realpath(dirname(__FILE__) . '/' . '../../../../../default/settings.php');
-$settings_path = $_SERVER['DOCUMENT_ROOT'] . "/sites//" . $_SERVER['SERVER_NAME'] . "/settings.php";
+$settings_path = $_SERVER['DOCUMENT_ROOT'] . conf_path() . "/settings.php";
 require_once $settings_path;
 
 $secret = '';
