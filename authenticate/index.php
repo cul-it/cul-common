@@ -77,8 +77,8 @@ exit();
 // }
 /*
 
-$de$get_destination = drupal_get_destination();
-stination = isset($get_destination['destination']) ? $get_destination['destination'] : '/';
+$get_destination = drupal_get_destination();
+$destination = isset($get_destination['destination']) ? $get_destination['destination'] : '/';
 drupal_goto($destination);
 */
 
