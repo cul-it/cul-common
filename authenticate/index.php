@@ -7,6 +7,7 @@ require_once DRUPAL_ROOT . '/includes/common.inc';
 require_once DRUPAL_ROOT . '/includes/module.inc';
 require_once DRUPAL_ROOT . '/includes/unicode.inc';
 require_once DRUPAL_ROOT . '/includes/file.inc';
+require_once DRUPAL_ROOT . '/includes/path.inc';
 
 // Do basic bootstrap to make sure the database can be accessed
 drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
