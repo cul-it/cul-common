@@ -66,8 +66,10 @@ else {
   $destination = urldecode($_GET['destination']);
 }
 
-$url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
-$url .= $_SERVER['HTTP_HOST'] . $destination;
+global $base_url;
+
+//$url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
+$url = $base_url . $destination;
 die( 'url before redirect: ' . $url);
 header('Location: ' . $url);
 exit();
