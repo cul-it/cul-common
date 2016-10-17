@@ -60,16 +60,20 @@ if (isset($netid) && $netid) {
 }
 
 if (! isset($_GET['destination']) || $_GET['destination'] == '') {
-  $destination = '/';
+  $destination = '';
 }
 else {
   $destination = urldecode($_GET['destination']);
 }
 
-global $base_url;
+$current_url = url(NULL, array('absolute' => TRUE));
+$parts = parse_url($current_url);
+$url = $parts['scheme'] . '://' . $parts['host'];
+if (!empty($parts['port'])) {
+  $url .= ':' . $parts['port'];
+}
+$url .= '/' . $destination;
 
-//$url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
-$url = $base_url . $destination;
 die( 'url before redirect: ' . $url);
 header('Location: ' . $url);
 exit();
