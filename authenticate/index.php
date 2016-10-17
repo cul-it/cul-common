@@ -58,6 +58,9 @@ if (isset($netid) && $netid) {
   setcookie('netid', $netid, 0, '/', '.cornell.edu');
   setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
+else {
+  die('no netid!!!'); ///jgr debug
+}
 
 if (! isset($_GET['destination']) || $_GET['destination'] == '') {
   $destination = '/';
@@ -73,6 +76,7 @@ if (!empty($parts['port'])) {
   $url .= ':' . $parts['port'];
 }
 $url .= $destination;
+die('url: ' . $url);
 header('Location: ' . $url);
 exit();
 
