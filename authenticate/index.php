@@ -74,7 +74,18 @@ if (!empty($parts['port'])) {
 }
 $url .= '/' . $destination;
 
-die( 'url before redirect: ' . $url);
+$get_destination = drupal_get_destination();
+
+$out = array(
+  'url' => $url,
+  'destination' => $destination,
+  'get_destination' => $get_destination,
+  'host' => $parts['host'],
+  'current' => $current_url,
+  );
+$str = print_r($out, true);
+
+die( $str);
 header('Location: ' . $url);
 exit();
 
