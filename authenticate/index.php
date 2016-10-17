@@ -75,7 +75,6 @@ exit();
 // if (!function_exists(current_path)) {
 //   function current_path() { return ''; }
 // }
-die ('before drupal_get_destination');
 $destination = drupal_get_destination();
 die ('destination:' . $destination);
 
