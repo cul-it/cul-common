@@ -75,6 +75,7 @@ if (!empty($parts['port'])) {
 $url .= '/' . $destination;
 
 $get_destination = drupal_get_destination();
+$request = $_SERVER['REQUEST_URI'];
 
 $out = array(
   'url' => $url,
@@ -82,6 +83,7 @@ $out = array(
   'get_destination' => $get_destination,
   'host' => $parts['host'],
   'current' => $current_url,
+  'request' => $request,
   );
 $str = print_r($out, true);
 
