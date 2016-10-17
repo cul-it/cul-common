@@ -70,6 +70,11 @@ header('Location: ' . $url);
 exit();
 */
 
+//PHP Fatal error:  Call to undefined function current_path()
+if (!function_exists(current_path)) {
+  function current_path() { return ''; }
+}
+
 $destination = drupal_get_destination();
 drupal_goto($destination);
 
