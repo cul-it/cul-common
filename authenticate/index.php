@@ -77,6 +77,8 @@ exit();
 // }
 
 $destination = drupal_get_destination();
+die ('destination:' . $destination);
+
 drupal_goto($destination);
 
 ?>
