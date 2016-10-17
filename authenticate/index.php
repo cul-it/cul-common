@@ -3,11 +3,11 @@
 // Full bootstrap of Drupal 7 to find settings.php and use drupal_get_destination
 define('DRUPAL_ROOT', $_SERVER['DOCUMENT_ROOT']);
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+require_once DRUPAL_ROOT . '/includes/path.inc';
 require_once DRUPAL_ROOT . '/includes/common.inc';
 require_once DRUPAL_ROOT . '/includes/module.inc';
 require_once DRUPAL_ROOT . '/includes/unicode.inc';
 require_once DRUPAL_ROOT . '/includes/file.inc';
-require_once DRUPAL_ROOT . '/includes/path.inc';
 
 // Do basic bootstrap to make sure the database can be accessed
 drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
