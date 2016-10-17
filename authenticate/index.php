@@ -68,6 +68,7 @@ else {
 
 $url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
 $url .= $_SERVER['HTTP_HOST'] . $destination;
+die( 'url before redirect: ' . $url);
 header('Location: ' . $url);
 exit();
 
