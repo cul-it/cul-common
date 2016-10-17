@@ -1,6 +1,17 @@
 <?php
 
-$settings_path = $_SERVER['DOCUMENT_ROOT'] . conf_path() . "/settings.php";
+// Full bootstrap of Drupal 7 to find settings.php and use drupal_get_destination
+define('DRUPAL_ROOT', getcwd());
+require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+require_once DRUPAL_ROOT . '/includes/common.inc';
+require_once DRUPAL_ROOT . '/includes/module.inc';
+require_once DRUPAL_ROOT . '/includes/unicode.inc';
+require_once DRUPAL_ROOT . '/includes/file.inc';
+
+// Do basic bootstrap to make sure the database can be accessed
+drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+
+$settings_path = $_SERVER['DOCUMENT_ROOT'] . '/' . conf_path() . "/settings.php";
 require_once $settings_path;
 
 $secret = '';
@@ -47,6 +58,7 @@ if (isset($netid) && $netid) {
   setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
 
+/*
 $destination = urldecode($_GET['destination']);
 if (! isset($_GET['destination']) || $_GET['destination'] == '') {
   $destination = '/';
@@ -56,6 +68,10 @@ $url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
 $url .= $_SERVER['HTTP_HOST'] . $destination;
 header('Location: ' . $url);
 exit();
+*/
+
+$destination = drupal_get_destination();
+drupal_goto($destination);
 
 ?>
 
