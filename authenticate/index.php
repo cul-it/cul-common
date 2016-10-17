@@ -60,7 +60,7 @@ if (isset($netid) && $netid) {
 }
 
 if (! isset($_GET['destination']) || $_GET['destination'] == '') {
-  $destination = '';
+  $destination = '/';
 }
 else {
   $destination = urldecode($_GET['destination']);
@@ -72,7 +72,7 @@ $url = $parts['scheme'] . '://' . $parts['host'];
 if (!empty($parts['port'])) {
   $url .= ':' . $parts['port'];
 }
-$url .= '/' . $destination;
+$url .= $destination;
 
 $get_destination = drupal_get_destination();
 $request = $_SERVER['REQUEST_URI'];
