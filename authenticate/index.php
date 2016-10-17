@@ -1,7 +1,7 @@
 <?php
 
 // Full bootstrap of Drupal 7 to find settings.php and use drupal_get_destination
-define('DRUPAL_ROOT', getcwd());
+define('DRUPAL_ROOT', $_SERVER['DOCUMENT_ROOT']);
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 require_once DRUPAL_ROOT . '/includes/common.inc';
 require_once DRUPAL_ROOT . '/includes/module.inc';
