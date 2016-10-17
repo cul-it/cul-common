@@ -58,6 +58,7 @@ if (isset($netid) && $netid) {
   setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
 
+/*
 $destination = urldecode($_GET['destination']);
 if (! isset($_GET['destination']) || $_GET['destination'] == '') {
   $destination = '/';
@@ -67,6 +68,10 @@ $url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
 $url .= $_SERVER['HTTP_HOST'] . $destination;
 header('Location: ' . $url);
 exit();
+*/
+
+$destination = drupal_get_destination();
+drupal_goto($destination);
 
 ?>
 
