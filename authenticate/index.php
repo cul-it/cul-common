@@ -59,25 +59,28 @@ if (isset($netid) && $netid) {
   setcookie('verify_netid', md5($netid . $secret), 0, '/', '.cornell.edu');
 }
 
-/*
-$destination = urldecode($_GET['destination']);
 if (! isset($_GET['destination']) || $_GET['destination'] == '') {
   $destination = '/';
+}
+else {
+  $destination = urldecode($_GET['destination']);
 }
 
 $url = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
 $url .= $_SERVER['HTTP_HOST'] . $destination;
 header('Location: ' . $url);
 exit();
-*/
 
 //PHP Fatal error:  Call to undefined function current_path()
 // if (!function_exists(current_path)) {
 //   function current_path() { return ''; }
 // }
-$get_destination = drupal_get_destination();
-$destination = isset($get_destination['destination']) ? $get_destination['destination'] : '/';
+/*
+
+$de$get_destination = drupal_get_destination();
+stination = isset($get_destination['destination']) ? $get_destination['destination'] : '/';
 drupal_goto($destination);
+*/
 
 ?>
 
