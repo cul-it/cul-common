@@ -73,38 +73,7 @@ if (!empty($parts['port'])) {
   $url .= ':' . $parts['port'];
 }
 $url .= $destination;
-
-$get_destination = drupal_get_destination();
-$request = $_SERVER['REQUEST_URI'];
-
-$out = array(
-  'url' => $url,
-  'destination' => $destination,
-  'get_destination' => $get_destination,
-  'host' => $parts['host'],
-  'current' => $current_url,
-  'request' => $request,
-  );
-$str = print_r($out, true);
-
-die( $str);
 header('Location: ' . $url);
 exit();
 
-//PHP Fatal error:  Call to undefined function current_path()
-// if (!function_exists(current_path)) {
-//   function current_path() { return ''; }
-// }
-/*
-
-$get_destination = drupal_get_destination();
-$destination = isset($get_destination['destination']) ? $get_destination['destination'] : '/';
-drupal_goto($destination);
-*/
-
 ?>
-
-
-
-
-
