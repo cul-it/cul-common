@@ -99,7 +99,7 @@ function get_voyager_patron_json() {
  *
  */
 function voyagerQueryToJSON($query) {
-  $json = exec('java -cp "' . dirname(__FILE__) . '/:' . dirname(__FILE__) . '/lib/ojdbc14_g.jar" voyagerQueryToJson "' . $query . '"');
+  $json = exec('java -cp "' . dirname(__FILE__) . '/:' . dirname(__FILE__) . '/lib/ojdbc7-12.1.0.2.jar" voyagerQueryToJson "' . $query . '"');
   $encoding =  mb_detect_encoding($json, "auto");
   $json = mb_convert_encoding($json, $encoding, "UTF-8");
   return $json;
